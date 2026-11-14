@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html>
-<body>
-<img id="view">
+<body style="display:flex;justify-content:center;align-items:center;height:100vh;margin:0;background:#50CAE5">
+<img id="view" style="border:2px solid white">
+<div>
 <p>Date: <span id="date"></span></p>
 <p>Detector: <span id="detector"></span></p>
 <p>Wavelength: <span id="wavelength"></span> µm</p>
 <p>URL: <a id="url"></a></p>
+<button onclick="paused=!paused;this.textContent=paused?'Resume':'Pause'">Pause</button>
+</div>
 <script>
 const API = "http://localhost:8000";
 let images = [];
 let i = 0;
+let paused = false;
 fetch(API + "/frames" + location.search)
   .then(response => {
     if (!response.ok) {
@@ -20,7 +24,7 @@ fetch(API + "/frames" + location.search)
   .then(data => images = data);
 
 setInterval(() => {
-  if (!images.length) return;
+  if (!images.length || paused) return;
   const f = images[i];
   document.getElementById("view").src = API + f.image;
   document.getElementById("date").textContent = f.date;
