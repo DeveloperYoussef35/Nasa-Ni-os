@@ -1,0 +1,8 @@
+"""required librarys"""
+astroquery
+astropy
+numpy
+pillow
+reproject
+fastapi
+uvicorn
