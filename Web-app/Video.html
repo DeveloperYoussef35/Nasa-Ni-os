@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body>
+<img id="view">
+<p>Date: <span id="date"></span></p>
+<p>Detector: <span id="detector"></span></p>
+<p>Wavelength: <span id="wavelength"></span> µm</p>
+<script>
+const images = ["test/Frame-0.jpg", "test/Frame-1.jpg", "test/Frame-2.jpg", "test/Frame-3.jpg", "test/Frame-4.jpg", "test/Frame-5.jpg"];
+let i = 0;
+    fetch('./meta.json')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      
+setInterval(() => {
+  document.getElementById("view").src = images[i];
+  i = (i + 1) % images.length;
+}, 2000);
+</script>
+</body>
+</html>
