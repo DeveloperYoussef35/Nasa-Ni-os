@@ -120,11 +120,19 @@ def make_frame(row, ra, dec, size_arcsec, out_path, scale=20, pad=1.5, stretch="
     return wavelength
 
 
-def build_detector(results, det, ra, dec, size_arcsec, out_dir, limit=None, stretch="zscale"):
-    """Make every frame for one detector, plus a D<det>.json describing them."""
+def build_detector(results, det, ra, dec, size_arcsec, out_dir, limit=None,
+                   stretch="zscale", max_frames=None):
+    """Make frames for one detector, plus a D<det>.json describing them.
+
+    limit:      only the first N frames (quick tests)
+    max_frames: N frames spread evenly across the whole year (preview mode)
+    """
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     rows = results[results["detector"] == det]
+    if max_frames and len(rows) > max_frames:
+        idx = np.linspace(0, len(rows) - 1, max_frames).round().astype(int)
+        rows = rows[idx]
     if limit:
         rows = rows[:limit]
 
@@ -157,10 +165,13 @@ if __name__ == "__main__":
     p.add_argument("--fov", type=float, default=120, help="field of view in arcsec")
     p.add_argument("--out", default="cache/test")
     p.add_argument("--limit", type=int, default=None)
+    p.add_argument("--max-frames", type=int, default=None,
+                   help="preview: N frames spread evenly across the year")
     p.add_argument("--stretch", default="zscale", choices=["zscale", "asinh"])
     a = p.parse_args()
 
     res = find_images(a.ra, a.dec)
     print(len(res), "images found")
-    out = build_detector(res, a.det, a.ra, a.dec, a.fov, a.out, limit=a.limit, stretch=a.stretch)
+    out = build_detector(res, a.det, a.ra, a.dec, a.fov, a.out, limit=a.limit,
+                         stretch=a.stretch, max_frames=a.max_frames)
     print(len(out), "frames saved to", a.out)
