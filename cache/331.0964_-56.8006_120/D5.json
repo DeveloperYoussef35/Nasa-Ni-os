@@ -1,0 +1,415 @@
+[
+  {
+    "image": "D5_000.png",
+    "date": "2025-04-24 20:31:57.101",
+    "mjd": 60789.855522,
+    "detector": 5,
+    "wavelength_um": 4.341
+  },
+  {
+    "image": "D5_001.png",
+    "date": "2025-04-24 20:34:06.010",
+    "mjd": 60789.857014,
+    "detector": 5,
+    "wavelength_um": 4.378
+  },
+  {
+    "image": "D5_003.png",
+    "date": "2025-04-24 22:09:58.781",
+    "mjd": 60789.923597,
+    "detector": 5,
+    "wavelength_um": 3.829
+  },
+  {
+    "image": "D5_004.png",
+    "date": "2025-04-24 22:12:07.690",
+    "mjd": 60789.925089,
+    "detector": 5,
+    "wavelength_um": 3.862
+  },
+  {
+    "image": "D5_005.png",
+    "date": "2025-04-26 01:47:21.206",
+    "mjd": 60791.074551,
+    "detector": 5,
+    "wavelength_um": 4.415
+  },
+  {
+    "image": "D5_006.png",
+    "date": "2025-04-26 05:05:25.786",
+    "mjd": 60791.212104,
+    "detector": 5,
+    "wavelength_um": 3.929
+  },
+  {
+    "image": "D5_007.png",
+    "date": "2025-04-26 05:07:34.781",
+    "mjd": 60791.213597,
+    "detector": 5,
+    "wavelength_um": 3.964
+  },
+  {
+    "image": "D5_008.png",
+    "date": "2025-04-26 05:09:43.690",
+    "mjd": 60791.215089,
+    "detector": 5,
+    "wavelength_um": 3.998
+  },
+  {
+    "image": "D5_009.png",
+    "date": "2025-04-26 19:43:35.530",
+    "mjd": 60791.821939,
+    "detector": 5,
+    "wavelength_um": 4.355
+  },
+  {
+    "image": "D5_011.png",
+    "date": "2025-04-26 19:47:53.347",
+    "mjd": 60791.824923,
+    "detector": 5,
+    "wavelength_um": 4.424
+  },
+  {
+    "image": "D5_012.png",
+    "date": "2025-04-27 16:54:30.355",
+    "mjd": 60792.704518,
+    "detector": 5,
+    "wavelength_um": 4.033
+  },
+  {
+    "image": "D5_013.png",
+    "date": "2025-04-27 16:56:39.264",
+    "mjd": 60792.70601,
+    "detector": 5,
+    "wavelength_um": 4.068
+  },
+  {
+    "image": "D5_014.png",
+    "date": "2025-04-27 16:58:48.173",
+    "mjd": 60792.707502,
+    "detector": 5,
+    "wavelength_um": 4.104
+  },
+  {
+    "image": "D5_015.png",
+    "date": "2025-04-27 17:00:57.082",
+    "mjd": 60792.708994,
+    "detector": 5,
+    "wavelength_um": 4.139
+  },
+  {
+    "image": "D5_016.png",
+    "date": "2025-05-04 16:51:53.798",
+    "mjd": 60799.702706,
+    "detector": 5,
+    "wavelength_um": 4.355
+  },
+  {
+    "image": "D5_017.png",
+    "date": "2025-05-04 16:54:02.707",
+    "mjd": 60799.704198,
+    "detector": 5,
+    "wavelength_um": 4.39
+  },
+  {
+    "image": "D5_018.png",
+    "date": "2025-05-04 16:56:11.616",
+    "mjd": 60799.70569,
+    "detector": 5,
+    "wavelength_um": 4.424
+  },
+  {
+    "image": "D5_019.png",
+    "date": "2025-06-06 15:40:10.992",
+    "mjd": 60832.652905,
+    "detector": 5,
+    "wavelength_um": 3.862
+  },
+  {
+    "image": "D5_020.png",
+    "date": "2025-06-06 15:42:19.901",
+    "mjd": 60832.654397,
+    "detector": 5,
+    "wavelength_um": 3.896
+  },
+  {
+    "image": "D5_021.png",
+    "date": "2025-06-06 17:18:03.427",
+    "mjd": 60832.720873,
+    "detector": 5,
+    "wavelength_um": 3.929
+  },
+  {
+    "image": "D5_022.png",
+    "date": "2025-06-06 17:20:12.336",
+    "mjd": 60832.722365,
+    "detector": 5,
+    "wavelength_um": 3.964
+  },
+  {
+    "image": "D5_023.png",
+    "date": "2025-06-06 17:22:21.331",
+    "mjd": 60832.723858,
+    "detector": 5,
+    "wavelength_um": 3.998
+  },
+  {
+    "image": "D5_024.png",
+    "date": "2025-06-06 17:24:30.240",
+    "mjd": 60832.72535,
+    "detector": 5,
+    "wavelength_um": 4.033
+  },
+  {
+    "image": "D5_025.png",
+    "date": "2025-06-06 20:30:47.290",
+    "mjd": 60832.854714,
+    "detector": 5,
+    "wavelength_um": 4.341
+  },
+  {
+    "image": "D5_026.png",
+    "date": "2025-06-06 20:32:56.198",
+    "mjd": 60832.856206,
+    "detector": 5,
+    "wavelength_um": 4.379
+  },
+  {
+    "image": "D5_027.png",
+    "date": "2025-06-06 20:35:05.194",
+    "mjd": 60832.857699,
+    "detector": 5,
+    "wavelength_um": 4.416
+  },
+  {
+    "image": "D5_028.png",
+    "date": "2025-06-07 12:51:30.355",
+    "mjd": 60833.535768,
+    "detector": 5,
+    "wavelength_um": 4.211
+  },
+  {
+    "image": "D5_029.png",
+    "date": "2025-06-07 12:53:39.264",
+    "mjd": 60833.53726,
+    "detector": 5,
+    "wavelength_um": 4.247
+  },
+  {
+    "image": "D5_030.png",
+    "date": "2025-06-07 12:55:48.173",
+    "mjd": 60833.538752,
+    "detector": 5,
+    "wavelength_um": 4.284
+  },
+  {
+    "image": "D5_031.png",
+    "date": "2025-10-02 00:26:12.998",
+    "mjd": 60950.018206,
+    "detector": 5,
+    "wavelength_um": 3.931
+  },
+  {
+    "image": "D5_032.png",
+    "date": "2025-10-02 00:30:30.902",
+    "mjd": 60950.021191,
+    "detector": 5,
+    "wavelength_um": 4.0
+  },
+  {
+    "image": "D5_033.png",
+    "date": "2025-10-02 00:32:39.811",
+    "mjd": 60950.022683,
+    "detector": 5,
+    "wavelength_um": 4.035
+  },
+  {
+    "image": "D5_034.png",
+    "date": "2025-10-02 02:06:31.277",
+    "mjd": 60950.087862,
+    "detector": 5,
+    "wavelength_um": 4.141
+  },
+  {
+    "image": "D5_035.png",
+    "date": "2025-10-02 02:08:40.272",
+    "mjd": 60950.089355,
+    "detector": 5,
+    "wavelength_um": 4.177
+  },
+  {
+    "image": "D5_036.png",
+    "date": "2025-10-02 02:10:49.181",
+    "mjd": 60950.090847,
+    "detector": 5,
+    "wavelength_um": 4.213
+  },
+  {
+    "image": "D5_037.png",
+    "date": "2025-10-02 21:38:15.475",
+    "mjd": 60950.901568,
+    "detector": 5,
+    "wavelength_um": 4.322
+  },
+  {
+    "image": "D5_038.png",
+    "date": "2025-10-02 21:42:33.293",
+    "mjd": 60950.904552,
+    "detector": 5,
+    "wavelength_um": 4.396
+  },
+  {
+    "image": "D5_039.png",
+    "date": "2025-10-02 23:15:35.683",
+    "mjd": 60950.969163,
+    "detector": 5,
+    "wavelength_um": 4.07
+  },
+  {
+    "image": "D5_040.png",
+    "date": "2025-10-06 07:09:24.998",
+    "mjd": 60954.298206,
+    "detector": 5,
+    "wavelength_um": 3.865
+  },
+  {
+    "image": "D5_041.png",
+    "date": "2025-10-06 07:11:33.907",
+    "mjd": 60954.299698,
+    "detector": 5,
+    "wavelength_um": 3.899
+  },
+  {
+    "image": "D5_042.png",
+    "date": "2025-10-06 08:47:15.965",
+    "mjd": 60954.366157,
+    "detector": 5,
+    "wavelength_um": 3.965
+  },
+  {
+    "image": "D5_043.png",
+    "date": "2025-10-06 12:00:28.944",
+    "mjd": 60954.500335,
+    "detector": 5,
+    "wavelength_um": 4.105
+  },
+  {
+    "image": "D5_044.png",
+    "date": "2025-10-09 19:53:47.587",
+    "mjd": 60957.829023,
+    "detector": 5,
+    "wavelength_um": 4.359
+  },
+  {
+    "image": "D5_045.png",
+    "date": "2025-10-09 23:08:26.534",
+    "mjd": 60957.964196,
+    "detector": 5,
+    "wavelength_um": 3.897
+  },
+  {
+    "image": "D5_046.png",
+    "date": "2025-10-10 05:41:16.368",
+    "mjd": 60958.236995,
+    "detector": 5,
+    "wavelength_um": 3.831
+  },
+  {
+    "image": "D5_047.png",
+    "date": "2025-10-10 05:43:25.277",
+    "mjd": 60958.238487,
+    "detector": 5,
+    "wavelength_um": 3.864
+  },
+  {
+    "image": "D5_048.png",
+    "date": "2025-10-10 05:45:34.186",
+    "mjd": 60958.239979,
+    "detector": 5,
+    "wavelength_um": 3.897
+  },
+  {
+    "image": "D5_049.png",
+    "date": "2025-10-23 14:43:18.451",
+    "mjd": 60971.613408,
+    "detector": 5,
+    "wavelength_um": 4.248
+  },
+  {
+    "image": "D5_050.png",
+    "date": "2025-10-23 14:45:27.360",
+    "mjd": 60971.6149,
+    "detector": 5,
+    "wavelength_um": 4.285
+  },
+  {
+    "image": "D5_051.png",
+    "date": "2025-11-06 16:13:24.240",
+    "mjd": 60985.675975,
+    "detector": 5,
+    "wavelength_um": 3.897
+  },
+  {
+    "image": "D5_052.png",
+    "date": "2025-11-07 11:45:19.152",
+    "mjd": 60986.489805,
+    "detector": 5,
+    "wavelength_um": 3.93
+  },
+  {
+    "image": "D5_053.png",
+    "date": "2025-11-07 23:10:34.234",
+    "mjd": 60986.965674,
+    "detector": 5,
+    "wavelength_um": 3.965
+  },
+  {
+    "image": "D5_054.png",
+    "date": "2025-11-08 08:57:56.880",
+    "mjd": 60987.373575,
+    "detector": 5,
+    "wavelength_um": 3.999
+  },
+  {
+    "image": "D5_056.png",
+    "date": "2026-04-24 21:20:02.515",
+    "mjd": 61154.888918,
+    "detector": 5,
+    "wavelength_um": 3.829
+  },
+  {
+    "image": "D5_057.png",
+    "date": "2026-04-25 02:11:32.640",
+    "mjd": 61155.09135,
+    "detector": 5,
+    "wavelength_um": 4.068
+  },
+  {
+    "image": "D5_058.png",
+    "date": "2026-04-25 02:13:41.549",
+    "mjd": 61155.092842,
+    "detector": 5,
+    "wavelength_um": 4.103
+  },
+  {
+    "image": "D5_059.png",
+    "date": "2026-04-25 02:15:50.458",
+    "mjd": 61155.094334,
+    "detector": 5,
+    "wavelength_um": 4.139
+  },
+  {
+    "image": "D5_060.png",
+    "date": "2026-04-25 02:17:59.366",
+    "mjd": 61155.095826,
+    "detector": 5,
+    "wavelength_um": 4.175
+  },
+  {
+    "image": "D5_061.png",
+    "date": "2026-04-30 14:06:47.693",
+    "mjd": 61160.588052,
+    "detector": 5,
+    "wavelength_um": 4.32
+  }
+]
