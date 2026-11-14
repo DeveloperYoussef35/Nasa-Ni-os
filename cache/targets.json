@@ -1,0 +1,57 @@
+[
+  {
+    "key": "barnard",
+    "name": "Barnard's Star",
+    "ra": 269.4463,
+    "dec": 4.76777,
+    "fov": 120,
+    "pm_ra_mas_yr": -801.551,
+    "pm_dec_mas_yr": 10362.394,
+    "stretch": "asinh",
+    "folder": "269.4463_4.7678_120"
+  },
+  {
+    "key": "epsindib",
+    "name": "Epsilon Indi B",
+    "ra": 331.09636,
+    "dec": -56.80055,
+    "fov": 120,
+    "pm_ra_mas_yr": 3981.977,
+    "pm_dec_mas_yr": -2466.832,
+    "stretch": "zscale",
+    "folder": "331.0964_-56.8006_120"
+  },
+  {
+    "key": "wise0855",
+    "name": "WISE 0855",
+    "ra": 133.75976,
+    "dec": -7.24224,
+    "fov": 300,
+    "pm_ra_mas_yr": -8123.7,
+    "pm_dec_mas_yr": 673.2,
+    "stretch": "zscale",
+    "folder": "133.7598_-7.2422_300"
+  },
+  {
+    "key": "rwaur",
+    "name": "RW Aur",
+    "ra": 76.95659,
+    "dec": 30.40129,
+    "fov": 120,
+    "pm_ra_mas_yr": 7.23,
+    "pm_dec_mas_yr": -20.33,
+    "stretch": "asinh",
+    "folder": "76.9566_30.4013_120"
+  },
+  {
+    "key": "rdra",
+    "name": "R Dra",
+    "ra": 248.16724,
+    "dec": 66.75502,
+    "fov": 120,
+    "pm_ra_mas_yr": -20.643,
+    "pm_dec_mas_yr": 6.149,
+    "stretch": "asinh",
+    "folder": "248.1672_66.7550_120"
+  }
+]

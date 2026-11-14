@@ -1,0 +1,296 @@
+[
+  {
+    "image": "D3_000.png",
+    "date": "2025-08-15 20:45:11.376",
+    "mjd": 60902.864715,
+    "detector": 3,
+    "wavelength_um": 2.308
+  },
+  {
+    "image": "D3_001.png",
+    "date": "2025-08-15 20:47:20.285",
+    "mjd": 60902.866207,
+    "detector": 3,
+    "wavelength_um": 2.36
+  },
+  {
+    "image": "D3_002.png",
+    "date": "2025-08-15 20:49:29.194",
+    "mjd": 60902.867699,
+    "detector": 3,
+    "wavelength_um": 2.411
+  },
+  {
+    "image": "D3_003.png",
+    "date": "2025-08-16 03:19:14.822",
+    "mjd": 60903.138366,
+    "detector": 3,
+    "wavelength_um": 1.632
+  },
+  {
+    "image": "D3_004.png",
+    "date": "2025-08-16 03:21:23.731",
+    "mjd": 60903.139858,
+    "detector": 3,
+    "wavelength_um": 1.67
+  },
+  {
+    "image": "D3_005.png",
+    "date": "2025-08-18 20:28:41.405",
+    "mjd": 60905.853257,
+    "detector": 3,
+    "wavelength_um": 1.708
+  },
+  {
+    "image": "D3_006.png",
+    "date": "2025-08-18 20:30:50.314",
+    "mjd": 60905.854749,
+    "detector": 3,
+    "wavelength_um": 1.748
+  },
+  {
+    "image": "D3_007.png",
+    "date": "2025-08-18 20:32:59.222",
+    "mjd": 60905.856241,
+    "detector": 3,
+    "wavelength_um": 1.788
+  },
+  {
+    "image": "D3_008.png",
+    "date": "2025-08-21 15:20:26.016",
+    "mjd": 60908.63919,
+    "detector": 3,
+    "wavelength_um": 1.83
+  },
+  {
+    "image": "D3_009.png",
+    "date": "2025-08-21 15:22:34.925",
+    "mjd": 60908.640682,
+    "detector": 3,
+    "wavelength_um": 1.873
+  },
+  {
+    "image": "D3_010.png",
+    "date": "2025-08-21 15:24:43.834",
+    "mjd": 60908.642174,
+    "detector": 3,
+    "wavelength_um": 1.917
+  },
+  {
+    "image": "D3_011.png",
+    "date": "2025-08-21 15:26:52.742",
+    "mjd": 60908.643666,
+    "detector": 3,
+    "wavelength_um": 1.961
+  },
+  {
+    "image": "D3_012.png",
+    "date": "2025-08-25 00:49:34.320",
+    "mjd": 60912.034425,
+    "detector": 3,
+    "wavelength_um": 2.006
+  },
+  {
+    "image": "D3_013.png",
+    "date": "2025-08-25 00:51:43.229",
+    "mjd": 60912.035917,
+    "detector": 3,
+    "wavelength_um": 2.052
+  },
+  {
+    "image": "D3_014.png",
+    "date": "2025-08-25 00:53:52.138",
+    "mjd": 60912.037409,
+    "detector": 3,
+    "wavelength_um": 2.101
+  },
+  {
+    "image": "D3_015.png",
+    "date": "2025-08-25 00:56:01.046",
+    "mjd": 60912.038901,
+    "detector": 3,
+    "wavelength_um": 2.149
+  },
+  {
+    "image": "D3_016.png",
+    "date": "2025-08-27 11:34:56.035",
+    "mjd": 60914.482593,
+    "detector": 3,
+    "wavelength_um": 2.199
+  },
+  {
+    "image": "D3_017.png",
+    "date": "2025-08-27 11:37:04.944",
+    "mjd": 60914.484085,
+    "detector": 3,
+    "wavelength_um": 2.25
+  },
+  {
+    "image": "D3_018.png",
+    "date": "2026-03-19 07:25:17.558",
+    "mjd": 61118.309231,
+    "detector": 3,
+    "wavelength_um": 1.794
+  },
+  {
+    "image": "D3_019.png",
+    "date": "2026-03-19 07:27:26.554",
+    "mjd": 61118.310724,
+    "detector": 3,
+    "wavelength_um": 1.836
+  },
+  {
+    "image": "D3_020.png",
+    "date": "2026-03-19 07:29:35.462",
+    "mjd": 61118.312216,
+    "detector": 3,
+    "wavelength_um": 1.879
+  },
+  {
+    "image": "D3_021.png",
+    "date": "2026-03-19 07:31:44.371",
+    "mjd": 61118.313708,
+    "detector": 3,
+    "wavelength_um": 1.923
+  },
+  {
+    "image": "D3_022.png",
+    "date": "2026-03-19 09:02:56.256",
+    "mjd": 61118.37704,
+    "detector": 3,
+    "wavelength_um": 1.967
+  },
+  {
+    "image": "D3_023.png",
+    "date": "2026-03-19 09:05:05.165",
+    "mjd": 61118.378532,
+    "detector": 3,
+    "wavelength_um": 2.013
+  },
+  {
+    "image": "D3_024.png",
+    "date": "2026-03-19 09:07:14.160",
+    "mjd": 61118.380025,
+    "detector": 3,
+    "wavelength_um": 2.058
+  },
+  {
+    "image": "D3_025.png",
+    "date": "2026-03-19 09:09:23.069",
+    "mjd": 61118.381517,
+    "detector": 3,
+    "wavelength_um": 2.107
+  },
+  {
+    "image": "D3_026.png",
+    "date": "2026-03-21 06:41:10.954",
+    "mjd": 61120.278599,
+    "detector": 3,
+    "wavelength_um": 2.362
+  },
+  {
+    "image": "D3_027.png",
+    "date": "2026-03-21 06:43:19.862",
+    "mjd": 61120.280091,
+    "detector": 3,
+    "wavelength_um": 2.412
+  },
+  {
+    "image": "D3_028.png",
+    "date": "2026-03-22 08:44:20.400",
+    "mjd": 61121.364125,
+    "detector": 3,
+    "wavelength_um": 2.155
+  },
+  {
+    "image": "D3_029.png",
+    "date": "2026-03-22 08:46:29.309",
+    "mjd": 61121.365617,
+    "detector": 3,
+    "wavelength_um": 2.206
+  },
+  {
+    "image": "D3_030.png",
+    "date": "2026-03-22 08:48:38.218",
+    "mjd": 61121.367109,
+    "detector": 3,
+    "wavelength_um": 2.257
+  },
+  {
+    "image": "D3_031.png",
+    "date": "2026-03-22 08:50:47.213",
+    "mjd": 61121.368602,
+    "detector": 3,
+    "wavelength_um": 2.309
+  },
+  {
+    "image": "D3_032.png",
+    "date": "2026-03-23 15:41:56.486",
+    "mjd": 61122.654126,
+    "detector": 3,
+    "wavelength_um": 1.625
+  },
+  {
+    "image": "D3_033.png",
+    "date": "2026-03-23 15:44:05.395",
+    "mjd": 61122.655618,
+    "detector": 3,
+    "wavelength_um": 1.662
+  },
+  {
+    "image": "D3_034.png",
+    "date": "2026-03-23 15:46:14.304",
+    "mjd": 61122.65711,
+    "detector": 3,
+    "wavelength_um": 1.7
+  },
+  {
+    "image": "D3_035.png",
+    "date": "2026-03-23 15:48:23.213",
+    "mjd": 61122.658602,
+    "detector": 3,
+    "wavelength_um": 1.74
+  },
+  {
+    "image": "D3_036.png",
+    "date": "2026-03-25 21:27:44.582",
+    "mjd": 61124.894266,
+    "detector": 3,
+    "wavelength_um": 1.779
+  },
+  {
+    "image": "D3_037.png",
+    "date": "2026-04-10 00:43:17.270",
+    "mjd": 61140.030061,
+    "detector": 3,
+    "wavelength_um": 1.793
+  },
+  {
+    "image": "D3_038.png",
+    "date": "2026-05-04 03:11:42.778",
+    "mjd": 61164.133134,
+    "detector": 3,
+    "wavelength_um": 2.107
+  },
+  {
+    "image": "D3_039.png",
+    "date": "2026-05-04 14:34:15.168",
+    "mjd": 61164.60712,
+    "detector": 3,
+    "wavelength_um": 2.155
+  },
+  {
+    "image": "D3_040.png",
+    "date": "2026-05-04 21:05:55.882",
+    "mjd": 61164.879119,
+    "detector": 3,
+    "wavelength_um": 2.206
+  },
+  {
+    "image": "D3_041.png",
+    "date": "2026-05-05 01:59:28.781",
+    "mjd": 61165.082972,
+    "detector": 3,
+    "wavelength_um": 2.256
+  }
+]
