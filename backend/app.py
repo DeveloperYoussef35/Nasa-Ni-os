@@ -42,3 +42,8 @@ def frames(
     for f in data:
         f["image"] = f"/cache/{folder.name}/{f['image']}"
     return data
+
+@app.get("/targets")
+def targets():
+    p = CACHE / "targets.json"
+    return json.load(open(p)) if p.exists() else []
