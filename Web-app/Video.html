@@ -1,15 +1,35 @@
 <!DOCTYPE html>
 <html>
 <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
-<body style="display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;margin:0;background:#90CDF4;color:#4A5568;font-family:Inter,sans-serif">
-<h1 style="color:#2B6CB0;margin:0 0 48px">Space seer</h1>
+<body style="display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;margin:0;background:#90CDF4;color:#4A5568;font-family:Inter,sans-serif">
+<h1 style="color:#2B6CB0;margin:0 0 24px">Space seer</h1>
+<form onsubmit="load();return false" style="background:#FFFFFF;padding:12px 24px;border-radius:8px;display:flex;gap:12px;align-items:center;margin-bottom:12px">
+<select id="target" onchange="pick()"><option value="">Target...</option></select>
+RA <input id="ra" size="8">
+Dec <input id="dec" size="8">
+FOV <input id="fov" size="4" value="120">
+Detector <select id="det"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option></select>
+<button style="background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter">Go</button>
+</form>
+<p id="msg"></p>
+<progress id="bar" style="display:none;width:400px"></progress>
 <div style="display:flex;align-items:center;gap:32px">
-<img id="view" style="border:2px solid #FFFFFF">
+<div style="position:relative;width:400px;height:400px">
+<img id="view" style="width:400px;height:400px;display:block;outline:2px solid #FFFFFF" onload="arrow()">
+<svg width="400" height="400" style="position:absolute;top:0;left:0;pointer-events:none">
+<defs><marker id="head" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0L6,3L0,6Z" fill="#90CDF4"/></marker></defs>
+<path d="M180,200H194M206,200H220M200,180V194M200,206V220" stroke="#90CDF4" stroke-width="2"/>
+<line id="pm" x1="200" y1="200" x2="200" y2="200" stroke="#90CDF4" stroke-width="2" marker-end="url(#head)" style="display:none"/>
+<text id="date" x="8" y="390" fill="#FFFFFF" font-size="14"></text>
+</svg>
+</div>
 <div style="background:#FFFFFF;padding:24px;border-radius:8px">
-<p>Date: <span id="date"></span></p>
+<p id="preview" style="color:#2B6CB0;font-weight:bold"></p>
 <p>Detector: <span id="detector"></span></p>
 <p>Wavelength: <span id="wavelength"></span> µm</p>
 <p>URL: <a id="url" style="color:#2B6CB0"></a></p>
+<p>Frame <input id="frame" type="range" min="0" max="0" value="0" oninput="i=+this.value;draw()"></p>
+<p>Speed <input id="speed" type="range" min="1" max="10" value="2"></p>
 <button style="background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter" onclick="paused=!paused;this.textContent=paused?'Resume':'Pause'">Pause</button>
 </div>
 </div>
@@ -21,40 +41,115 @@
 <button style="display:block;margin-left:auto;background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter">Submit</button>
 </div>
 <script>
+const API = "http://localhost:8000";
+const $ = id => document.getElementById(id);
+let images = [];
+let targets = [];
+let i = 0;
+let paused = false;
+let current = "";
+
 function report() {
-  popurl.textContent = document.getElementById("url").textContent;
+  popurl.textContent = $("url").textContent || location.href;
   pop.style.display = "block";
 }
 document.onkeydown = e => {
-  if (e.code === "Space" && pop.style.display !== "block") {
+  if (e.code === "Space" && pop.style.display !== "block" && !["INPUT", "SELECT", "TEXTAREA"].includes(e.target.tagName)) {
     e.preventDefault();
     report();
   }
 };
-const API = "http://localhost:8000";
-let images = [];
-let i = 0;
-let paused = false;
-fetch(API + "/frames" + location.search)
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(data => images = data);
 
-setInterval(() => {
-  if (!images.length || paused) return;
+fetch(API + "/targets").then(r => r.json()).then(t => {
+  targets = t;
+  t.forEach((x, n) => $("target").add(new Option(x.name, n)));
+});
+
+function pick() {
+  const t = targets[$("target").value];
+  if (!t) return;
+  $("ra").value = t.ra;
+  $("dec").value = t.dec;
+  $("fov").value = t.fov;
+  load();
+}
+
+function load() {
+  const p = new URLSearchParams({ra: $("ra").value, dec: $("dec").value, fov: $("fov").value, det: $("det").value});
+  history.replaceState(null, "", "?" + p);
+  current = p.toString();
+  images = [];
+  $("msg").textContent = "Finding images...";
+  $("bar").style.display = "none";
+  check(current, "/start");
+}
+
+function check(p, endpoint) {
+  fetch(API + endpoint + "?" + p).then(r => r.json()).then(s => {
+    if (p !== current) return;
+    if (s.state === "ready") return fetch(API + "/frames?" + p).then(r => r.json()).then(show);
+    if (s.state === "error" || s.detail) {
+      $("msg").textContent = s.error || JSON.stringify(s.detail);
+      return;
+    }
+    if (s.state === "building") {
+      $("msg").textContent = "Building frames...";
+      $("bar").style.display = "block";
+      $("bar").max = s.total || 1;
+      $("bar").value = s.done;
+    }
+    setTimeout(() => check(p, s.state === "not_started" ? "/start" : "/status"), 2000);
+  }).catch(e => $("msg").textContent = e);
+}
+
+function show(data) {
+  $("bar").style.display = "none";
+  $("msg").textContent = data.length ? "" : "No frames for this position and detector";
+  images = data;
+  i = 0;
+  $("frame").max = Math.max(data.length - 1, 0);
+  draw();
+}
+
+function draw() {
+  if (!images.length) return;
   const f = images[i];
-  document.getElementById("view").src = API + f.image;
-  document.getElementById("date").textContent = f.date;
-  document.getElementById("detector").textContent = f.detector;
-  document.getElementById("wavelength").textContent = f.wavelength_um;
-  document.getElementById("url").textContent = f.url;
-  document.getElementById("url").href = f.url;
-  i = (i + 1) % images.length;
-}, 2000);
+  $("view").src = API + f.image;
+  $("date").textContent = f.date.slice(0, 16);
+  $("detector").textContent = f.detector;
+  $("wavelength").textContent = f.wavelength_um;
+  $("url").textContent = f.url || "";
+  $("url").href = f.url || "";
+  $("frame").value = i;
+  $("preview").textContent = f.preview ? "Preview: 12 frames across the year" : "";
+}
+
+function arrow() {
+  const t = targets.find(x => x.ra == $("ra").value && x.dec == $("dec").value && x.fov == $("fov").value);
+  $("pm").style.display = t ? "block" : "none";
+  if (!t) return;
+  const scale = 5 * 400 / $("view").naturalWidth * 20 / 6.15;
+  $("pm").setAttribute("x2", 200 - t.pm_ra_mas_yr / 1000 * scale);
+  $("pm").setAttribute("y2", 200 - t.pm_dec_mas_yr / 1000 * scale);
+}
+
+function tick() {
+  if (images.length && !paused) {
+    i = (i + 1) % images.length;
+    draw();
+  }
+  setTimeout(tick, 1000 / $("speed").value);
+}
+tick();
+
+const q = new URLSearchParams(location.search);
+if (q.get("ra") && q.get("dec")) {
+  $("ra").value = q.get("ra");
+  $("dec").value = q.get("dec");
+  $("fov").value = q.get("fov") || 120;
+  $("det").value = q.get("det") || 3;
+  load();
+}
 </script>
 </body>
 </html>
