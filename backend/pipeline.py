@@ -118,6 +118,7 @@ def build_detector(results, det, ra, dec, size_arcsec, out_dir, limit=None):
                 "date": str(r["date"]),
                 "mjd": float(r["t_min"]),
                 "detector": det,
+                "url": str(r["access_url"]),
                 "wavelength_um": None if np.isnan(wl) else round(wl, 3),
             })
     with open(out_dir / f"D{det}.json", "w") as f:

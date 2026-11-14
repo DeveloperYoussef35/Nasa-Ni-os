@@ -5,19 +5,29 @@
 <p>Date: <span id="date"></span></p>
 <p>Detector: <span id="detector"></span></p>
 <p>Wavelength: <span id="wavelength"></span> µm</p>
+<p>URL: <a id="url"></a></p>
 <script>
-const images = ["test/Frame-0.jpg", "test/Frame-1.jpg", "test/Frame-2.jpg", "test/Frame-3.jpg", "test/Frame-4.jpg", "test/Frame-5.jpg"];
+const API = "http://localhost:8000";
+let images = [];
 let i = 0;
-    fetch('./meta.json')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      
+fetch(API + "/frames" + location.search)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => images = data);
+
 setInterval(() => {
-  document.getElementById("view").src = images[i];
+  if (!images.length) return;
+  const f = images[i];
+  document.getElementById("view").src = API + f.image;
+  document.getElementById("date").textContent = f.date;
+  document.getElementById("detector").textContent = f.detector;
+  document.getElementById("wavelength").textContent = f.wavelength_um;
+  document.getElementById("url").textContent = f.url;
+  document.getElementById("url").href = f.url;
   i = (i + 1) % images.length;
 }, 2000);
 </script>
