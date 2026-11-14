@@ -17,6 +17,7 @@ from astropy.wcs import WCS
 from astroquery.ipac.irsa import Irsa
 from PIL import Image
 from reproject import reproject_interp
+from scipy.ndimage import maximum_filter
 
 logging.getLogger("astropy").setLevel(logging.WARNING)
 conf.remote_timeout = 120
@@ -26,7 +27,16 @@ COLLECTION = "spherex_dr1"
 def find_images(ra, dec, radius_arcsec=50):
     """Ask IRSA for every SPHEREx exposure covering this position."""
     coord = SkyCoord(ra=ra * u.deg, dec=dec * u.deg)
-    results = Irsa.query_sia(pos=(coord, radius_arcsec * u.arcsec), collection=COLLECTION)
+    for attempt in range(5):
+        try:
+            results = Irsa.query_sia(pos=(coord, radius_arcsec * u.arcsec), collection=COLLECTION)
+            break
+        except Exception as e:
+            wait = 10 * (attempt + 1)
+            print(f"  IRSA query failed ({type(e).__name__}); retrying in {wait}s")
+            time.sleep(wait)
+    else:
+        raise RuntimeError("IRSA query kept failing")
     if len(results) == 0:
         raise ValueError("IRSA found no images at that position")
     results["detector"] = [int(n[-1]) for n in results["energy_bandpassname"]]
@@ -70,7 +80,7 @@ def get_wavelength(hdul, ra, dec):
         return float("nan")
 
 
-def make_frame(row, ra, dec, size_arcsec, out_path, scale=20, pad=1.5):
+def make_frame(row, ra, dec, size_arcsec, out_path, scale=20, pad=1.5, stretch="zscale"):
     """Download one cutout, align it north-up, stretch it, save a PNG.
     Returns the wavelength in micrometres, or None if the frame was skipped."""
     url = f"{row['access_url']}?center={ra},{dec}d&size={size_arcsec * pad / 3600}"
@@ -83,12 +93,26 @@ def make_frame(row, ra, dec, size_arcsec, out_path, scale=20, pad=1.5):
     data, _ = reproject_interp((data, WCS(header)), target_wcs, shape_out=shape)
 
     valid = np.isfinite(data)
-    if valid.mean() < 0.95:
+    if valid.mean() < 0.85:          # bright stars have big saturated (NaN) cores
         return None
 
-    lo, hi = ZScaleInterval().get_limits(data[valid])
-    img = np.clip((data - lo) / (hi - lo), 0, 1)
-    img = (np.nan_to_num(img, nan=0.0) * 255).astype("uint8")
+    # fill invalid pixels (saturated cores, bad pixels) from their brightest neighbour
+    if not valid.all():
+        filled = maximum_filter(np.where(valid, data, -np.inf), size=9)
+        data = np.where(valid, data, filled)
+        data[~np.isfinite(data)] = np.median(data[valid])
+
+    if stretch == "asinh":
+        lo = np.median(data[valid])          # the background level
+        hi = data[valid].max()
+        if hi <= lo:
+            hi = lo + 1
+        scaled = np.clip((data - lo) / (hi - lo), 0, 1)
+        img = np.arcsinh(10 * scaled) / np.arcsinh(10)
+    else:
+        lo, hi = ZScaleInterval().get_limits(data[valid])
+        img = np.clip((data - lo) / (hi - lo), 0, 1)
+    img = (img * 255).astype("uint8")
 
     im = Image.fromarray(img).resize((img.shape[1] * scale, img.shape[0] * scale), Image.NEAREST)
     im = im.transpose(Image.FLIP_TOP_BOTTOM)
@@ -96,7 +120,7 @@ def make_frame(row, ra, dec, size_arcsec, out_path, scale=20, pad=1.5):
     return wavelength
 
 
-def build_detector(results, det, ra, dec, size_arcsec, out_dir, limit=None):
+def build_detector(results, det, ra, dec, size_arcsec, out_dir, limit=None, stretch="zscale"):
     """Make every frame for one detector, plus a D<det>.json describing them."""
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -108,7 +132,7 @@ def build_detector(results, det, ra, dec, size_arcsec, out_dir, limit=None):
     for i, r in enumerate(rows):
         name = f"D{det}_{i:03d}.png"
         try:
-            wl = make_frame(r, ra, dec, size_arcsec, out_dir / name)
+            wl = make_frame(r, ra, dec, size_arcsec, out_dir / name, stretch=stretch)
         except Exception as e:
             print(f"  skip {i}: {e}")
             continue
@@ -133,9 +157,10 @@ if __name__ == "__main__":
     p.add_argument("--fov", type=float, default=120, help="field of view in arcsec")
     p.add_argument("--out", default="cache/test")
     p.add_argument("--limit", type=int, default=None)
+    p.add_argument("--stretch", default="zscale", choices=["zscale", "asinh"])
     a = p.parse_args()
 
     res = find_images(a.ra, a.dec)
     print(len(res), "images found")
-    out = build_detector(res, a.det, a.ra, a.dec, a.fov, a.out, limit=a.limit)
+    out = build_detector(res, a.det, a.ra, a.dec, a.fov, a.out, limit=a.limit, stretch=a.stretch)
     print(len(out), "frames saved to", a.out)
