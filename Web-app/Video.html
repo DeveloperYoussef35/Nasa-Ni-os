@@ -13,7 +13,24 @@
 <button style="background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter" onclick="paused=!paused;this.textContent=paused?'Resume':'Pause'">Pause</button>
 </div>
 </div>
+<div onclick="report()" style="margin-top:32px;width:600px;padding:12px;background:#2B6CB0;color:#FFFFFF;text-align:center;border-radius:8px;cursor:pointer">Report</div>
+<div id="pop" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#FFFFFF;padding:24px;border-radius:8px">
+<span onclick="pop.style.display='none'" style="position:absolute;top:8px;right:12px;cursor:pointer">&times;</span>
+<p id="popurl"></p>
+<textarea placeholder="Details" rows="5" cols="40"></textarea>
+<button style="display:block;margin-left:auto;background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter">Submit</button>
+</div>
 <script>
+function report() {
+  popurl.textContent = document.getElementById("url").textContent;
+  pop.style.display = "block";
+}
+document.onkeydown = e => {
+  if (e.code === "Space" && pop.style.display !== "block") {
+    e.preventDefault();
+    report();
+  }
+};
 const API = "http://localhost:8000";
 let images = [];
 let i = 0;
