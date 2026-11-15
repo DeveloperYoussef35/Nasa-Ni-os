@@ -2,92 +2,93 @@
 <html>
 <title>Space Watch</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-<body style="display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;margin:0;background:#90CDF4;color:#4A5568;font-family:Inter,sans-serif;accent-color:#2B6CB0">
-<header style="align-self:stretch;background:#2B6CB0;padding:12px 32px;margin-bottom:auto;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px">
-<h1 style="margin:0;color:#FFFFFF;font-size:24px">Space Watch</h1>
-<form onsubmit="load();return false" style="background:#3F82CC;color:#FFFFFF;padding:8px 20px;border-radius:8px;display:flex;gap:12px;align-items:center;margin:0">
-<select id="target" onchange="pick()" style="border:none;border-radius:4px;padding:4px 6px;font-family:Inter"><option value="">Target...</option></select>
-RA <input id="ra" size="8" style="border:none;border-radius:4px;padding:4px 6px;font-family:Inter">
-Dec <input id="dec" size="8" style="border:none;border-radius:4px;padding:4px 6px;font-family:Inter">
-FOV <input id="fov" size="4" value="120" style="border:none;border-radius:4px;padding:4px 6px;font-family:Inter">
-Detector <select id="det" style="border:none;border-radius:4px;padding:4px 6px;font-family:Inter"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option></select>
-<button style="background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter;border-radius:4px;cursor:pointer">Go</button>
+<body style="display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;margin:0;background:#0F172A;color:#CBD5E1;font-family:Inter,sans-serif;accent-color:#2563EB;color-scheme:dark">
+<header style="align-self:stretch;background:#020617;padding:12px 32px;margin-bottom:auto;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px">
+<h1 style="margin:0;color:#F1F5F9;font-size:24px">Space Watch</h1>
+<form onsubmit="load();return false" style="background:#1E293B;color:#CBD5E1;padding:8px 20px;border-radius:8px;display:flex;gap:12px;align-items:center;margin:0">
+<select id="target" onchange="pick()" style="border:none;border-radius:4px;padding:4px 6px;font-family:Inter;background:#0F172A;color:#CBD5E1"><option value="">Target...</option></select>
+RA <input id="ra" size="8" style="border:none;border-radius:4px;padding:4px 6px;font-family:Inter;background:#0F172A;color:#CBD5E1">
+Dec <input id="dec" size="8" style="border:none;border-radius:4px;padding:4px 6px;font-family:Inter;background:#0F172A;color:#CBD5E1">
+FOV <input id="fov" size="4" value="120" style="border:none;border-radius:4px;padding:4px 6px;font-family:Inter;background:#0F172A;color:#CBD5E1">
+Detector <select id="det" style="border:none;border-radius:4px;padding:4px 6px;font-family:Inter;background:#0F172A;color:#CBD5E1"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option><option value="all">All</option></select>
+<button style="background:#2563EB;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter;border-radius:4px;cursor:pointer">Go</button>
 </form>
 <div id="featMenu" style="justify-self:end;position:relative">
-<button onclick="toggleFeatures()" style="background:none;border:none;color:#FFFFFF;font-family:Inter;font-size:16px;cursor:pointer;padding:8px 0">Features <span id="featArrow" style="display:inline-block;transition:transform 0.2s">&#9662;</span></button>
-<div id="featPanel" style="display:none;position:absolute;right:0;top:calc(100% + 12px);z-index:10;width:320px;max-height:70vh;overflow-y:auto;box-sizing:border-box;background:#FFFFFF;color:#4A5568;padding:16px 16px 4px;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.2);font-size:13px;line-height:1.5">
-<p style="margin:0 0 12px"><span style="color:#2B6CB0;font-weight:bold">Search.</span> Pick a test target, or enter RA and Dec in decimal degrees, a field of view in arcseconds and one of the six detectors. Adding ?ra=...&amp;dec=... to the link opens a position directly.</p>
-<p style="margin:0 0 12px"><span style="color:#2B6CB0;font-weight:bold">Playback.</span> SPHEREx frames play in time order like a video. Use the frame slider, speed and pause. On test targets the arrow shows the expected direction of motion.</p>
-<p style="margin:0 0 12px"><span style="color:#2B6CB0;font-weight:bold">Frames.</span> Tick frames in the list to use them with Blink, Difference and Stack. Click a row to jump to that frame.</p>
-<p style="margin:0 0 12px"><span style="color:#2B6CB0;font-weight:bold">Blink.</span> Flips quickly between the ticked frames, so anything that moves seems to jump while stars stay still.</p>
-<p style="margin:0 0 12px"><span style="color:#2B6CB0;font-weight:bold">Difference.</span> Subtracts the earlier of two ticked frames from the later one. White is brighter later, black is brighter earlier, and unchanged sky turns grey.</p>
-<p style="margin:0 0 12px"><span style="color:#2B6CB0;font-weight:bold">Stack.</span> Averages the ticked frames to cut noise and reveal faint sources. Moving objects smear out.</p>
-<p style="margin:0 0 12px"><span style="color:#2B6CB0;font-weight:bold">Spectrum.</span> Measures how bright the centre target is at each wavelength, using raw SPHEREx data. Choose one detector or all six.</p>
-<p style="margin:0 0 12px"><span style="color:#2B6CB0;font-weight:bold">Report.</span> Press Report or the space bar to save a note about the current frame for others to check.</p>
+<button onclick="toggleFeatures()" style="background:none;border:none;color:#CBD5E1;font-family:Inter;font-size:16px;cursor:pointer;padding:8px 0">Features <span id="featArrow" style="display:inline-block;transition:transform 0.2s">&#9662;</span></button>
+<div id="featPanel" style="display:none;position:absolute;right:0;top:calc(100% + 12px);z-index:10;width:320px;max-height:70vh;overflow-y:auto;box-sizing:border-box;background:#1E293B;color:#CBD5E1;padding:16px 16px 4px;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.2);font-size:13px;line-height:1.5">
+<p style="margin:0 0 12px"><span style="color:#60A5FA;font-weight:bold">Search.</span> Pick a test target, or enter RA and Dec in decimal degrees, a field of view in arcseconds and one of the six detectors, or All. Adding ?ra=...&amp;dec=... to the link opens a position directly.</p>
+<p style="margin:0 0 12px"><span style="color:#60A5FA;font-weight:bold">All detectors.</span> Choose All in the detector menu to load the frames from all six detectors together, in time order. Stack them to combine every detector into the deepest, least noisy image. Detectors 1 and 4, 2 and 5, and 3 and 6 take their pictures at the same moment, so stacking those pairs adds light without blurring moving objects. Colour information gets mixed, so use Spectrum to see it.</p>
+<p style="margin:0 0 12px"><span style="color:#60A5FA;font-weight:bold">Playback.</span> SPHEREx frames play in time order like a video. Use the frame slider, speed and pause. On test targets the arrow shows the expected direction of motion.</p>
+<p style="margin:0 0 12px"><span style="color:#60A5FA;font-weight:bold">Frames.</span> Tick frames in the list to use them with Blink, Difference and Stack. Click a row to jump to that frame.</p>
+<p style="margin:0 0 12px"><span style="color:#60A5FA;font-weight:bold">Blink.</span> Flips quickly between the ticked frames, so anything that moves seems to jump while stars stay still.</p>
+<p style="margin:0 0 12px"><span style="color:#60A5FA;font-weight:bold">Difference.</span> Subtracts the earlier of two ticked frames from the later one. White is brighter later, black is brighter earlier, and unchanged sky turns grey.</p>
+<p style="margin:0 0 12px"><span style="color:#60A5FA;font-weight:bold">Stack.</span> Averages the ticked frames to cut noise and reveal faint sources. Moving objects smear out.</p>
+<p style="margin:0 0 12px"><span style="color:#60A5FA;font-weight:bold">Spectrum.</span> Measures how bright the centre target is at each wavelength, using raw SPHEREx data. Choose one detector or all six.</p>
+<p style="margin:0 0 12px"><span style="color:#60A5FA;font-weight:bold">Report.</span> Press Report or the space bar to save a note about the current frame for others to check.</p>
 </div>
 </div>
 </header>
 <p id="msg"></p>
 <progress id="bar" style="display:none;width:400px"></progress>
 <div style="display:flex;align-items:flex-start;gap:32px">
-<div style="background:#FFFFFF;border-radius:8px;width:260px;height:400px;display:flex;flex-direction:column;box-sizing:border-box">
-<p style="margin:12px 16px 4px;font-weight:bold;color:#2B6CB0">Frames <span id="selcount" style="font-weight:normal;color:#4A5568;font-size:13px"></span></p>
-<p style="margin:0 16px 8px;font-size:13px"><a href="#" onclick="selectAll(true);return false" style="color:#2B6CB0">All</a> &middot; <a href="#" onclick="selectAll(false);return false" style="color:#2B6CB0">None</a></p>
-<div id="list" style="flex:1;overflow-y:auto;position:relative;border-top:1px solid #E2E8F0;border-bottom:1px solid #E2E8F0"></div>
+<div style="background:#1E293B;border-radius:8px;width:260px;height:400px;display:flex;flex-direction:column;box-sizing:border-box">
+<p style="margin:12px 16px 4px;font-weight:bold;color:#F1F5F9">Frames <span id="selcount" style="font-weight:normal;color:#94A3B8;font-size:13px"></span></p>
+<p style="margin:0 16px 8px;font-size:13px"><a href="#" onclick="selectAll(true);return false" style="color:#60A5FA">All</a> &middot; <a href="#" onclick="selectAll(false);return false" style="color:#60A5FA">None</a></p>
+<div id="list" style="flex:1;overflow-y:auto;position:relative;border-top:1px solid #334155;border-bottom:1px solid #334155"></div>
 <p id="modemsg" style="margin:8px 12px 0;font-size:12px;min-height:16px"></p>
 <div style="display:flex;flex-wrap:wrap;gap:8px;padding:8px 12px 12px">
-<button id="blinkBtn" onclick="toggleBlink()" style="flex:1;background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 0;font-family:Inter;border-radius:4px;cursor:pointer">Blink</button>
-<button id="diffBtn" onclick="toggleDiff()" style="flex:1;background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 0;font-family:Inter;border-radius:4px;cursor:pointer">Difference</button>
-<button id="stackBtn" onclick="toggleStack()" style="flex-basis:100%;background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 0;font-family:Inter;border-radius:4px;cursor:pointer">Stack</button>
+<button id="blinkBtn" onclick="toggleBlink()" style="flex:1;background:#2563EB;color:#FFFFFF;border:none;padding:8px 0;font-family:Inter;border-radius:4px;cursor:pointer">Blink</button>
+<button id="diffBtn" onclick="toggleDiff()" style="flex:1;background:#2563EB;color:#FFFFFF;border:none;padding:8px 0;font-family:Inter;border-radius:4px;cursor:pointer">Difference</button>
+<button id="stackBtn" onclick="toggleStack()" style="flex-basis:100%;background:#2563EB;color:#FFFFFF;border:none;padding:8px 0;font-family:Inter;border-radius:4px;cursor:pointer">Stack</button>
 </div>
 </div>
 <div style="position:relative;width:400px;height:400px">
-<p id="empty" style="position:absolute;inset:0;margin:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:72px;color:#2B6CB0">Pick a target, or enter coordinates and press Go</p>
-<img id="view" crossorigin="anonymous" style="width:400px;height:400px;display:block;outline:2px solid #FFFFFF" onload="arrow()">
-<canvas id="result" style="position:absolute;top:0;left:0;width:400px;height:400px;display:none;image-rendering:pixelated;outline:2px solid #FFFFFF"></canvas>
+<p id="empty" style="position:absolute;inset:0;margin:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:72px;color:#94A3B8">Pick a target, or enter coordinates and press Go</p>
+<img id="view" crossorigin="anonymous" style="width:400px;height:400px;display:block;outline:2px solid #334155" onload="arrow()">
+<canvas id="result" style="position:absolute;top:0;left:0;width:400px;height:400px;display:none;image-rendering:pixelated;outline:2px solid #334155"></canvas>
 <svg width="400" height="400" style="position:absolute;top:0;left:0;pointer-events:none">
-<defs><marker id="head" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0L6,3L0,6Z" fill="#90CDF4"/></marker></defs>
-<path d="M180,200H194M206,200H220M200,180V194M200,206V220" stroke="#90CDF4" stroke-width="2"/>
-<line id="pm" x1="200" y1="200" x2="200" y2="200" stroke="#90CDF4" stroke-width="2" marker-end="url(#head)" style="display:none"/>
+<defs><marker id="head" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0L6,3L0,6Z" fill="#60A5FA"/></marker></defs>
+<path d="M180,200H194M206,200H220M200,180V194M200,206V220" stroke="#60A5FA" stroke-width="2"/>
+<line id="pm" x1="200" y1="200" x2="200" y2="200" stroke="#60A5FA" stroke-width="2" marker-end="url(#head)" style="display:none"/>
 <text id="date" x="8" y="390" fill="#FFFFFF" font-size="14"></text>
 </svg>
 </div>
-<div style="background:#FFFFFF;padding:24px;border-radius:8px">
-<p id="preview" style="color:#2B6CB0;font-weight:bold"></p>
+<div style="background:#1E293B;padding:24px;border-radius:8px">
+<p id="preview" style="color:#60A5FA;font-weight:bold"></p>
 <p>Detector: <span id="detector">–</span></p>
 <p>Wavelength: <span id="wavelength">–</span> µm</p>
-<p>URL: <a id="url" style="color:#2B6CB0">–</a></p>
+<p>URL: <a id="url" style="color:#60A5FA">–</a></p>
 <p>Frame <input id="frame" type="range" min="0" max="0" value="0" oninput="jump(+this.value)"></p>
 <p>Speed <input id="speed" type="range" min="1" max="10" value="2"></p>
-<button style="background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter;border-radius:4px;cursor:pointer" onclick="paused=!paused;this.textContent=paused?'Resume':'Pause'">Pause</button>
+<button style="background:#2563EB;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter;border-radius:4px;cursor:pointer" onclick="paused=!paused;this.textContent=paused?'Resume':'Pause'">Pause</button>
 </div>
 </div>
-<div style="margin-top:32px;width:600px;box-sizing:border-box;background:#FFFFFF;padding:16px 24px;border-radius:8px">
+<div style="margin-top:32px;margin-bottom:96px;width:600px;box-sizing:border-box;background:#1E293B;padding:16px 24px;border-radius:8px">
 <div style="display:flex;align-items:center;gap:8px">
-<p style="margin:0;font-weight:bold;color:#2B6CB0;flex:1">Spectrum <span id="speccount" style="font-weight:normal;color:#4A5568;font-size:13px"></span></p>
-<button id="specOne" onclick="spectrum(false)" style="background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter;border-radius:4px;cursor:pointer">This detector</button>
-<button id="specAll" onclick="spectrum(true)" style="background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter;border-radius:4px;cursor:pointer">All detectors</button>
+<p style="margin:0;font-weight:bold;color:#F1F5F9;flex:1">Spectrum <span id="speccount" style="font-weight:normal;color:#94A3B8;font-size:13px"></span></p>
+<button id="specOne" onclick="spectrum(false)" style="background:#2563EB;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter;border-radius:4px;cursor:pointer">This detector</button>
+<button id="specAll" onclick="spectrum(true)" style="background:#2563EB;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter;border-radius:4px;cursor:pointer">All detectors</button>
 </div>
 <p id="specmsg" style="margin:8px 0 0;font-size:12px;min-height:16px">Brightness of the centre target at each wavelength. The first run per detector downloads from IRSA and takes a few minutes</p>
 <svg id="spec" width="552" height="260" style="display:none;margin-top:8px;font-family:Inter"></svg>
 </div>
-<div onclick="report()" style="margin-top:32px;width:600px;padding:12px;background:#2B6CB0;color:#FFFFFF;text-align:center;border-radius:8px;cursor:pointer;margin-bottom:32px">Report</div>
-<footer style="align-self:stretch;margin-top:auto;background:#2B6CB0;color:#FFFFFF;padding:24px 32px;font-size:13px;line-height:1.5">
-<div style="max-width:900px;margin:auto">
+<footer style="align-self:stretch;margin-top:auto;background:#020617;color:#94A3B8;padding:24px 32px;font-size:13px;line-height:1.5;display:flex;justify-content:space-between;align-items:flex-end;gap:48px">
+<div style="flex:1">
 <h2 style="margin:0 0 8px;font-size:16px">Our story</h2>
 <p style="margin:0 0 8px">We are NASA Niños, and Space Watch started with a simple goal: let anyone watch the sky change. Getting there was harder than it looked.</p>
 <p style="margin:0 0 8px">SPHEREx frames arrive tilted, at different scales and in a different colour of light every time, so we had to line each one up on the same north-up grid before a moving star would look like it moved. The brightest stars overloaded the detector and left holes in their centres, so we learned to patch them and to use gentler contrast so stars would not blow out.</p>
 <p style="margin:0 0 8px">The stars would not sit still either. Barnard's Star has moved several arcminutes since its catalogue position was measured, so we had to work out where every target is today. The IRSA archive went down more than once while we worked, and every frame takes seconds to download, so we added retries, a quick 12-frame preview, a progress bar and a cache that makes the test targets instant.</p>
 <p style="margin:0">We built the frontend and the backend separately and merged them along the way, fixing whatever broke. The result is a tool we hope helps someone spot something new.</p>
 </div>
+<button onclick="report()" style="flex-shrink:0;background:#2563EB;color:#FFFFFF;border:none;padding:12px 48px;font-family:Inter;font-size:16px;border-radius:2px;cursor:pointer">Report</button>
 </footer>
-<div id="pop" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#FFFFFF;padding:24px;border-radius:8px">
+<div id="pop" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#1E293B;padding:24px;border-radius:8px">
 <span onclick="pop.style.display='none'" style="position:absolute;top:8px;right:12px;cursor:pointer">&times;</span>
 <p id="popurl"></p>
 <p>Frame date: <span id="popdate"></span></p>
 <p>Username <input id="username"></p>
 <textarea id="details" placeholder="Details" style="width:100%;height:400px;box-sizing:border-box"></textarea>
-<button onclick="submitReport()" style="display:block;margin-left:auto;background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter">Submit</button>
+<button onclick="submitReport()" style="display:block;margin-left:auto;background:#2563EB;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter">Submit</button>
 </div>
 <script>
 const API = "http://localhost:8000";
@@ -135,34 +136,58 @@ function pick() {
   load();
 }
 
+const allDets = () => new URLSearchParams(current).get("det") === "all";
+
 function load() {
   const p = new URLSearchParams({ra: $("ra").value, dec: $("dec").value, fov: $("fov").value, det: $("det").value});
   history.replaceState(null, "", "?" + p);
   current = p.toString();
+  const token = current;
   images = [];
   resetFrames();
   clearSpectrum();
   $("msg").textContent = "Finding images...";
   $("bar").style.display = "none";
-  check(current, "/start");
-}
-
-function check(p, endpoint) {
-  fetch(API + endpoint + "?" + p).then(r => r.json()).then(s => {
-    if (p !== current) return;
-    if (s.state === "ready") return fetch(API + "/frames?" + p).then(r => r.json()).then(show);
-    if (s.state === "error" || s.detail) {
-      $("msg").textContent = s.error || JSON.stringify(s.detail);
+  const dets = allDets() ? [1, 2, 3, 4, 5, 6] : [$("det").value];
+  const progress = {};
+  Promise.allSettled(dets.map(d => {
+    const q = new URLSearchParams(current);
+    q.set("det", d);
+    return check(token, q.toString(), "/start", s => { progress[d] = s; showProgress(progress); });
+  })).then(results => {
+    if (token !== current) return;
+    const ok = results.filter(r => r.status === "fulfilled");
+    if (!ok.length) {
+      $("bar").style.display = "none";
+      $("msg").textContent = results[0].reason.message || results[0].reason;
       return;
     }
-    if (s.state === "building") {
-      $("msg").textContent = "Building frames...";
-      $("bar").style.display = "block";
-      $("bar").max = s.total || 1;
-      $("bar").value = s.done;
-    }
-    setTimeout(() => check(p, s.state === "not_started" ? "/start" : "/status"), 2000);
-  }).catch(e => $("msg").textContent = e);
+    show(ok.flatMap(r => r.value).sort((a, b) => a.mjd - b.mjd));
+  });
+}
+
+// poll one detector until its frames are built, then return them
+function check(token, q, endpoint, onBuild) {
+  return fetch(API + endpoint + "?" + q).then(r => r.json()).then(s => {
+    if (token !== current) return [];
+    if (s.state === "ready") return fetch(API + "/frames?" + q).then(r => r.json()).then(d => {
+      if (!Array.isArray(d)) throw new Error(JSON.stringify(d.detail));
+      return d;
+    });
+    if (s.state === "error" || s.detail) throw new Error(s.error || JSON.stringify(s.detail));
+    if (s.state === "building") onBuild(s);
+    return new Promise(ok => setTimeout(ok, 2000))
+      .then(() => check(token, q, s.state === "not_started" ? "/start" : "/status", onBuild));
+  });
+}
+
+// one progress bar for however many detectors are building
+function showProgress(progress) {
+  const jobs = Object.values(progress);
+  $("msg").textContent = "Building frames...";
+  $("bar").style.display = "block";
+  $("bar").max = jobs.reduce((n, s) => n + (s.total || 0), 0) || 1;
+  $("bar").value = jobs.reduce((n, s) => n + s.done, 0);
 }
 
 function show(data) {
@@ -216,14 +241,14 @@ function renderList() {
   $("list").innerHTML = images.map((f, n) => `
 <label style="display:flex;gap:8px;align-items:center;padding:4px 16px;font-size:13px;cursor:pointer">
 <input type="checkbox" ${selected.has(n) ? "checked" : ""} onchange="toggleSel(${n}, this)">
-<span onclick="event.preventDefault();jump(${n})">${n + 1}. ${f.date.slice(0, 16)} &middot; ${f.wavelength_um ?? "?"} µm</span>
+<span onclick="event.preventDefault();jump(${n})">${n + 1}. ${f.date.slice(0, 16)} &middot; ${allDets() ? "D" + f.detector + " &middot; " : ""}${f.wavelength_um ?? "?"} µm</span>
 </label>`).join("");
   highlightRow();
 }
 
 function highlightRow() {
   const rows = $("list").children;
-  [...rows].forEach((r, n) => r.style.background = n === i && !still() ? "#EBF8FF" : "");
+  [...rows].forEach((r, n) => r.style.background = n === i && !still() ? "#1E3A5F" : "");
   const r = rows[i], L = $("list");
   if (!r || still()) return;
   if (r.offsetTop < L.scrollTop || r.offsetTop + r.offsetHeight > L.scrollTop + L.clientHeight)
@@ -440,7 +465,7 @@ function clearSpectrum() {
 async function spectrum(all) {
   if (!current) return;
   const token = ++specToken;
-  const dets = all ? [1, 2, 3, 4, 5, 6] : [+new URLSearchParams(current).get("det")];
+  const dets = all || allDets() ? [1, 2, 3, 4, 5, 6] : [+new URLSearchParams(current).get("det")];
   $("specOne").disabled = $("specAll").disabled = true;
   $("specOne").style.opacity = $("specAll").style.opacity = 0.4;
   $("specmsg").textContent = `Measuring ${dets.length > 1 ? "all 6 detectors" : "detector " + dets[0]}... this can take a few minutes`;
@@ -482,17 +507,17 @@ function plotSpectrum(points) {
   const Y = v => H - B - (v - y0) / (y1 + ypad - y0) * (H - T - B);
   const ticks = (a, b) => [0, 1, 2, 3, 4].map(k => a + (b - a) * k / 4);
   const fmt = v => Math.abs(v) >= 100 ? v.toFixed(0) : Math.abs(v) >= 1 ? v.toFixed(1) : v.toFixed(2);
-  let out = `<line x1="${L}" y1="${H - B}" x2="${W - R}" y2="${H - B}" stroke="#4A5568"/>
-<line x1="${L}" y1="${T}" x2="${L}" y2="${H - B}" stroke="#4A5568"/>`;
+  let out = `<line x1="${L}" y1="${H - B}" x2="${W - R}" y2="${H - B}" stroke="#94A3B8"/>
+<line x1="${L}" y1="${T}" x2="${L}" y2="${H - B}" stroke="#94A3B8"/>`;
   for (const v of ticks(x0, x1))
-    out += `<text x="${X(v)}" y="${H - B + 16}" font-size="11" fill="#4A5568" text-anchor="middle">${v.toFixed(2)}</text>`;
+    out += `<text x="${X(v)}" y="${H - B + 16}" font-size="11" fill="#94A3B8" text-anchor="middle">${v.toFixed(2)}</text>`;
   for (const v of ticks(y0, y1 + ypad))
-    out += `<line x1="${L}" y1="${Y(v)}" x2="${W - R}" y2="${Y(v)}" stroke="#E2E8F0"/>
-<text x="${L - 6}" y="${Y(v) + 4}" font-size="11" fill="#4A5568" text-anchor="end">${fmt(v)}</text>`;
-  out += `<text x="${(L + W - R) / 2}" y="${H - 4}" font-size="12" fill="#4A5568" text-anchor="middle">Wavelength (µm)</text>
-<text x="14" y="${(T + H - B) / 2}" font-size="12" fill="#4A5568" text-anchor="middle" transform="rotate(-90 14 ${(T + H - B) / 2})">Brightness (mJy)</text>
-<polyline fill="none" stroke="#90CDF4" stroke-width="1.5" points="${points.map(p => X(p.wavelength_um) + "," + Y(p.flux_mjy)).join(" ")}"/>`;
-  points.forEach((p, n) => out += `<circle cx="${X(p.wavelength_um)}" cy="${Y(p.flux_mjy)}" r="4" fill="#2B6CB0" style="cursor:pointer" onclick="specJump(${n})"><title>${p.wavelength_um} µm, ${fmt(p.flux_mjy)} mJy, D${p.detector}, ${p.date.slice(0, 16)}</title></circle>`);
+    out += `<line x1="${L}" y1="${Y(v)}" x2="${W - R}" y2="${Y(v)}" stroke="#334155"/>
+<text x="${L - 6}" y="${Y(v) + 4}" font-size="11" fill="#94A3B8" text-anchor="end">${fmt(v)}</text>`;
+  out += `<text x="${(L + W - R) / 2}" y="${H - 4}" font-size="12" fill="#94A3B8" text-anchor="middle">Wavelength (µm)</text>
+<text x="14" y="${(T + H - B) / 2}" font-size="12" fill="#94A3B8" text-anchor="middle" transform="rotate(-90 14 ${(T + H - B) / 2})">Brightness (mJy)</text>
+<polyline fill="none" stroke="#2563EB" stroke-width="1.5" points="${points.map(p => X(p.wavelength_um) + "," + Y(p.flux_mjy)).join(" ")}"/>`;
+  points.forEach((p, n) => out += `<circle cx="${X(p.wavelength_um)}" cy="${Y(p.flux_mjy)}" r="4" fill="#60A5FA" style="cursor:pointer" onclick="specJump(${n})"><title>${p.wavelength_um} µm, ${fmt(p.flux_mjy)} mJy, D${p.detector}, ${p.date.slice(0, 16)}</title></circle>`);
   svg.innerHTML = out;
   svg.style.display = "block";
   specPoints = points;
