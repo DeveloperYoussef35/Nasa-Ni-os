@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html>
 <title>Space Watch</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
-<body style="display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;margin:0;background:#90CDF4;color:#4A5568;font-family:Inter,sans-serif">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<body style="display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;margin:0;background:#90CDF4;color:#4A5568;font-family:Inter,sans-serif;accent-color:#2B6CB0">
 <header style="align-self:stretch;background:#2B6CB0;padding:12px 32px;margin-bottom:auto;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px">
 <h1 style="margin:0;color:#FFFFFF;font-size:24px">Space Watch</h1>
 <form onsubmit="load();return false" style="background:#3F82CC;color:#FFFFFF;padding:8px 20px;border-radius:8px;display:flex;gap:12px;align-items:center;margin:0">
-<select id="target" onchange="pick()"><option value="">Target...</option></select>
-RA <input id="ra" size="8">
-Dec <input id="dec" size="8">
-FOV <input id="fov" size="4" value="120">
-Detector <select id="det"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option></select>
-<button style="background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter">Go</button>
+<select id="target" onchange="pick()" style="border:none;border-radius:4px;padding:4px 6px;font-family:Inter"><option value="">Target...</option></select>
+RA <input id="ra" size="8" style="border:none;border-radius:4px;padding:4px 6px;font-family:Inter">
+Dec <input id="dec" size="8" style="border:none;border-radius:4px;padding:4px 6px;font-family:Inter">
+FOV <input id="fov" size="4" value="120" style="border:none;border-radius:4px;padding:4px 6px;font-family:Inter">
+Detector <select id="det" style="border:none;border-radius:4px;padding:4px 6px;font-family:Inter"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option></select>
+<button style="background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter;border-radius:4px;cursor:pointer">Go</button>
 </form>
 <div id="featMenu" style="justify-self:end;position:relative">
 <button onclick="toggleFeatures()" style="background:none;border:none;color:#FFFFFF;font-family:Inter;font-size:16px;cursor:pointer;padding:8px 0">Features <span id="featArrow" style="display:inline-block;transition:transform 0.2s">&#9662;</span></button>
@@ -29,7 +29,7 @@ Detector <select id="det"><option>1</option><option>2</option><option selected>3
 </header>
 <p id="msg"></p>
 <progress id="bar" style="display:none;width:400px"></progress>
-<div style="display:flex;align-items:center;gap:32px">
+<div style="display:flex;align-items:flex-start;gap:32px">
 <div style="background:#FFFFFF;border-radius:8px;width:260px;height:400px;display:flex;flex-direction:column;box-sizing:border-box">
 <p style="margin:12px 16px 4px;font-weight:bold;color:#2B6CB0">Frames <span id="selcount" style="font-weight:normal;color:#4A5568;font-size:13px"></span></p>
 <p style="margin:0 16px 8px;font-size:13px"><a href="#" onclick="selectAll(true);return false" style="color:#2B6CB0">All</a> &middot; <a href="#" onclick="selectAll(false);return false" style="color:#2B6CB0">None</a></p>
@@ -42,6 +42,7 @@ Detector <select id="det"><option>1</option><option>2</option><option selected>3
 </div>
 </div>
 <div style="position:relative;width:400px;height:400px">
+<p id="empty" style="position:absolute;inset:0;margin:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:72px;color:#2B6CB0">Pick a target, or enter coordinates and press Go</p>
 <img id="view" crossorigin="anonymous" style="width:400px;height:400px;display:block;outline:2px solid #FFFFFF" onload="arrow()">
 <canvas id="result" style="position:absolute;top:0;left:0;width:400px;height:400px;display:none;image-rendering:pixelated;outline:2px solid #FFFFFF"></canvas>
 <svg width="400" height="400" style="position:absolute;top:0;left:0;pointer-events:none">
@@ -53,12 +54,12 @@ Detector <select id="det"><option>1</option><option>2</option><option selected>3
 </div>
 <div style="background:#FFFFFF;padding:24px;border-radius:8px">
 <p id="preview" style="color:#2B6CB0;font-weight:bold"></p>
-<p>Detector: <span id="detector"></span></p>
-<p>Wavelength: <span id="wavelength"></span> µm</p>
-<p>URL: <a id="url" style="color:#2B6CB0"></a></p>
+<p>Detector: <span id="detector">–</span></p>
+<p>Wavelength: <span id="wavelength">–</span> µm</p>
+<p>URL: <a id="url" style="color:#2B6CB0">–</a></p>
 <p>Frame <input id="frame" type="range" min="0" max="0" value="0" oninput="jump(+this.value)"></p>
 <p>Speed <input id="speed" type="range" min="1" max="10" value="2"></p>
-<button style="background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter" onclick="paused=!paused;this.textContent=paused?'Resume':'Pause'">Pause</button>
+<button style="background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter;border-radius:4px;cursor:pointer" onclick="paused=!paused;this.textContent=paused?'Resume':'Pause'">Pause</button>
 </div>
 </div>
 <div style="margin-top:32px;width:600px;box-sizing:border-box;background:#FFFFFF;padding:16px 24px;border-radius:8px">
@@ -176,6 +177,7 @@ function show(data) {
 
 function draw() {
   if (!images.length) return;
+  $("empty").style.display = "none";
   const f = images[i];
   $("view").src = API + f.image;
   $("date").textContent = f.date.slice(0, 16);
