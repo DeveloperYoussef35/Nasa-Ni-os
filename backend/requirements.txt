@@ -1,4 +1,4 @@
-"""required librarys"""
+#required libraries
 astroquery
 astropy
 numpy
