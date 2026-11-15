@@ -1,4 +1,4 @@
-"""required librarys"""
+#required libraries
 astroquery
 astropy
 numpy
@@ -6,3 +6,4 @@ pillow
 reproject
 fastapi
 uvicorn
+scipy
