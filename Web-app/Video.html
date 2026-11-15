@@ -20,6 +20,7 @@ Detector <select id="det" style="border:none;border-radius:4px;padding:4px 6px;f
 <p style="margin:0 0 12px"><span style="color:#60A5FA;font-weight:bold">All detectors.</span> Choose All in the detector menu to load the frames from all six detectors together, in time order. Stack them to combine every detector into the deepest, least noisy image. Detectors 1 and 4, 2 and 5, and 3 and 6 take their pictures at the same moment, so stacking those pairs adds light without blurring moving objects. Colour information gets mixed, so use Spectrum to see it.</p>
 <p style="margin:0 0 12px"><span style="color:#60A5FA;font-weight:bold">Playback.</span> SPHEREx frames play in time order like a video. Use the frame slider, speed and pause. On test targets the arrow shows the expected direction of motion.</p>
 <p style="margin:0 0 12px"><span style="color:#60A5FA;font-weight:bold">Frames.</span> Tick frames in the list to use them with Blink, Difference and Stack. Click a row to jump to that frame.</p>
+<p style="margin:0 0 12px"><span style="color:#60A5FA;font-weight:bold">Visits.</span> Click the Frames button at the top of the list to switch the box to Visits. SPHEREx sweeps the whole sky and returns to each patch about every six months. A visit is one of those observing seasons. In this data a visit runs from under a day to about three months, six weeks on average, and holds between 30 and 200 frames. Every frame in a visit is averaged into one cleaner picture. The main image then plays through the visits, and Blink, Difference and Stack work on visits instead of frames. Subtracting one visit from another is the best way to spot something that moved, because about half a year of motion separates them. Click the button again to go back to Frames.</p>
 <p style="margin:0 0 12px"><span style="color:#60A5FA;font-weight:bold">Blink.</span> Flips quickly between the ticked frames, so anything that moves seems to jump while stars stay still.</p>
 <p style="margin:0 0 12px"><span style="color:#60A5FA;font-weight:bold">Difference.</span> Subtracts the earlier of two ticked frames from the later one. White is brighter later, black is brighter earlier, and unchanged sky turns grey.</p>
 <p style="margin:0 0 12px"><span style="color:#60A5FA;font-weight:bold">Stack.</span> Averages the ticked frames to cut noise and reveal faint sources. Moving objects smear out.</p>
@@ -32,7 +33,7 @@ Detector <select id="det" style="border:none;border-radius:4px;padding:4px 6px;f
 <progress id="bar" style="display:none;width:400px"></progress>
 <div style="display:flex;align-items:flex-start;gap:32px">
 <div style="background:#1E293B;border-radius:8px;width:260px;height:400px;display:flex;flex-direction:column;box-sizing:border-box">
-<p style="margin:12px 16px 4px;font-weight:bold;color:#F1F5F9">Frames <span id="selcount" style="font-weight:normal;color:#94A3B8;font-size:13px"></span></p>
+<p style="margin:12px 16px 4px;color:#F1F5F9"><button id="viewBtn" onclick="setView(view === 'frames' ? 'visits' : 'frames')" title="Switch between frames and visits" style="background:#2563EB;color:#FFFFFF;border:none;padding:4px 12px;font-family:Inter;font-size:16px;font-weight:bold;border-radius:4px;cursor:pointer">Frames &#8644;</button> <span id="selcount" style="font-weight:normal;color:#94A3B8;font-size:13px"></span></p>
 <p style="margin:0 16px 8px;font-size:13px"><a href="#" onclick="selectAll(true);return false" style="color:#60A5FA">All</a> &middot; <a href="#" onclick="selectAll(false);return false" style="color:#60A5FA">None</a></p>
 <div id="list" style="flex:1;overflow-y:auto;position:relative;border-top:1px solid #334155;border-bottom:1px solid #334155"></div>
 <p id="modemsg" style="margin:8px 12px 0;font-size:12px;min-height:16px"></p>
@@ -93,7 +94,12 @@ Detector <select id="det" style="border:none;border-radius:4px;padding:4px 6px;f
 <script>
 const API = "http://localhost:8000";
 const $ = id => document.getElementById(id);
-let images = [];
+let frames = [];          // every frame loaded for this target
+let visits = null;        // one averaged picture per visit, built the first time Visits is opened
+let view = "frames";      // which page of the list box is showing
+let images = [];          // what the player and the list use: frames or visits
+let visitToken = 0;       // stops an outdated visit build from finishing
+const VISIT_GAP_DAYS = 30;   // a longer pause than this starts a new visit
 let targets = [];
 let i = 0;
 let paused = false;
@@ -144,6 +150,9 @@ function load() {
   current = p.toString();
   const token = current;
   images = [];
+  frames = [];
+  visits = null;
+  visitToken++;
   resetFrames();
   clearSpectrum();
   $("msg").textContent = "Finding images...";
@@ -193,19 +202,17 @@ function showProgress(progress) {
 function show(data) {
   $("bar").style.display = "none";
   $("msg").textContent = data.length ? "" : "No frames for this position and detector";
-  images = data;
-  i = 0;
-  $("frame").max = Math.max(data.length - 1, 0);
-  resetFrames();
-  draw();
+  frames = data;
+  visits = null;
+  setView(view);
 }
 
 function draw() {
   if (!images.length) return;
   $("empty").style.display = "none";
   const f = images[i];
-  $("view").src = API + f.image;
-  $("date").textContent = f.date.slice(0, 16);
+  $("view").src = src(f);
+  $("date").textContent = f.count ? `${f.date} · ${f.count} frames` : f.date.slice(0, 16);
   $("detector").textContent = f.detector;
   $("wavelength").textContent = f.wavelength_um;
   $("url").textContent = f.url || "";
@@ -226,6 +233,8 @@ function arrow() {
 
 // ---- frame list, blink, difference and stack ----
 const sel = () => [...selected].sort((a, b) => a - b);
+const src = f => f.src || API + f.image;                   // visits carry their own picture
+const noun = () => view === "visits" ? "visits" : "frames";
 const still = () => mode === "diff" || mode === "stack";   // modes that show one computed image
 
 function resetFrames() {
@@ -241,7 +250,7 @@ function renderList() {
   $("list").innerHTML = images.map((f, n) => `
 <label style="display:flex;gap:8px;align-items:center;padding:4px 16px;font-size:13px;cursor:pointer">
 <input type="checkbox" ${selected.has(n) ? "checked" : ""} onchange="toggleSel(${n}, this)">
-<span onclick="event.preventDefault();jump(${n})">${n + 1}. ${f.date.slice(0, 16)} &middot; ${allDets() ? "D" + f.detector + " &middot; " : ""}${f.wavelength_um ?? "?"} µm</span>
+<span onclick="event.preventDefault();jump(${n})">${n + 1}. ${f.count ? `${f.date} &middot; ${f.count} frames` : `${f.date.slice(0, 16)} &middot; ${allDets() ? "D" + f.detector + " &middot; " : ""}${f.wavelength_um ?? "?"} µm`}</span>
 </label>`).join("");
   highlightRow();
 }
@@ -274,7 +283,7 @@ function selectionChanged() {
 function toggleSel(n, box) {
   if (box.checked && mode === "diff" && selected.size >= 2) {
     box.checked = false;
-    $("modemsg").textContent = "Difference mode uses exactly 2 frames";
+    $("modemsg").textContent = `Difference mode uses exactly 2 ${noun()}`;
     return;
   }
   box.checked ? selected.add(n) : selected.delete(n);
@@ -303,7 +312,7 @@ function updateButtons() {
   }
   $("selcount").textContent = n ? `(${n} selected)` : "";
   if (mode === "normal")
-    $("modemsg").textContent = images.length ? "Tick 2 or more frames to blink or stack, exactly 2 for difference" : "";
+    $("modemsg").textContent = images.length ? `Tick 2 or more ${noun()} to blink or stack, exactly 2 for difference` : "";
 }
 
 function stopMode() {
@@ -323,7 +332,7 @@ function toggleBlink() {
   i = sel()[0];
   draw();
   updateButtons();
-  $("modemsg").textContent = `Blinking ${selected.size} frames`;
+  $("modemsg").textContent = `Blinking ${selected.size} ${noun()}`;
 }
 
 function toggleDiff() {
@@ -372,9 +381,24 @@ function percentile(hist, frac, total) {
   return 255;
 }
 
-// draw grey values (0-255, clipped) onto the result canvas
-function paint(values, w, h) {
-  const c = $("result");
+// average same-sized pictures, then stretch so the darkest 0.5% is black and the brightest 0.5% is white
+function average(ims) {
+  const w = ims[0].naturalWidth, h = ims[0].naturalHeight;
+  const avg = new Float32Array(w * h), hist = new Uint32Array(256);
+  for (const im of ims) {
+    const px = pixels(im, w, h);
+    for (let p = 0; p < avg.length; p++) avg[p] += px[p * 4];
+  }
+  for (let p = 0; p < avg.length; p++) {
+    avg[p] /= ims.length;
+    hist[Math.round(avg[p])]++;
+  }
+  const lo = percentile(hist, 0.005, avg.length), hi = percentile(hist, 0.995, avg.length);
+  return {values: avg.map(v => 255 * (v - lo) / Math.max(hi - lo, 1)), w, h};
+}
+
+// draw grey values (0-255, clipped) onto a canvas, the result canvas by default
+function paint(values, w, h, c = $("result")) {
   c.width = w; c.height = h;
   const g = c.getContext("2d"), out = g.createImageData(w, h);
   for (let p = 0; p < values.length; p++) {
@@ -384,6 +408,7 @@ function paint(values, w, h) {
   }
   g.putImageData(out, 0, 0);
   c.style.display = "block";
+  return c;
 }
 
 // later frame minus earlier frame: white = brighter later, black = brighter earlier
@@ -392,7 +417,7 @@ async function renderDiff() {
   const token = ++renderToken;
   $("modemsg").textContent = "Computing difference...";
   try {
-    const [A, B] = await Promise.all([a, b].map(n => loadImg(API + images[n].image)));
+    const [A, B] = await Promise.all([a, b].map(n => loadImg(src(images[n]))));
     if (token !== renderToken || mode !== "diff") return;
     const w = A.naturalWidth, h = A.naturalHeight;
     const pa = pixels(A, w, h), pb = pixels(B, w, h);
@@ -405,7 +430,7 @@ async function renderDiff() {
     const top = Math.max(percentile(hist, 0.995, d.length), 1);
     paint(d.map(v => 128 + 127 * v / top), w, h);
     $("date").textContent = `#${b + 1} minus #${a + 1}`;
-    $("wavelength").textContent = `${images[b].wavelength_um} − ${images[a].wavelength_um}`;
+    $("wavelength").textContent = view === "visits" ? images[b].wavelength_um : `${images[b].wavelength_um} − ${images[a].wavelength_um}`;
     $("modemsg").textContent = `White: brighter in #${b + 1}. Black: brighter in #${a + 1}`;
   } catch (e) {
     renderFailed(token, "Difference", e);
@@ -416,27 +441,18 @@ async function renderDiff() {
 async function renderStack() {
   const s = sel();
   const token = ++renderToken;
-  $("modemsg").textContent = `Stacking ${s.length} frames...`;
+  $("modemsg").textContent = `Stacking ${s.length} ${noun()}...`;
   try {
-    const ims = await Promise.all(s.map(n => loadImg(API + images[n].image)));
+    const ims = await Promise.all(s.map(n => loadImg(src(images[n]))));
     if (token !== renderToken || mode !== "stack") return;
-    const w = ims[0].naturalWidth, h = ims[0].naturalHeight;
-    const avg = new Float32Array(w * h), hist = new Uint32Array(256);
-    for (const im of ims) {
-      const px = pixels(im, w, h);
-      for (let p = 0; p < avg.length; p++) avg[p] += px[p * 4];
-    }
-    for (let p = 0; p < avg.length; p++) {
-      avg[p] /= ims.length;
-      hist[Math.round(avg[p])]++;
-    }
-    // stretch so the darkest 0.5% is black and the brightest 0.5% is white
-    const lo = percentile(hist, 0.005, avg.length), hi = percentile(hist, 0.995, avg.length);
-    paint(avg.map(v => 255 * (v - lo) / Math.max(hi - lo, 1)), w, h);
-    const waves = s.map(n => images[n].wavelength_um).filter(x => x != null);
-    $("date").textContent = `Stack of ${s.length}: ${images[s[0]].date.slice(0, 10)} to ${images[s[s.length - 1]].date.slice(0, 10)}`;
-    $("wavelength").textContent = waves.length ? `${Math.min(...waves)} – ${Math.max(...waves)}` : "?";
-    $("modemsg").textContent = `Average of ${s.length} frames. Moving objects smear out`;
+    const {values, w, h} = average(ims);
+    paint(values, w, h);
+    const picked = s.map(n => images[n]), last = picked[picked.length - 1];
+    const lows = picked.map(f => f.wmin ?? f.wavelength_um).filter(x => x != null);
+    const highs = picked.map(f => f.wmax ?? f.wavelength_um).filter(x => x != null);
+    $("date").textContent = `Stack of ${s.length}: ${picked[0].date.slice(0, 10)} to ${(last.end || last.date).slice(0, 10)}`;
+    $("wavelength").textContent = lows.length ? `${Math.min(...lows)} – ${Math.max(...highs)}` : "?";
+    $("modemsg").textContent = `Average of ${s.length} ${noun()}. Moving objects smear out`;
   } catch (e) {
     renderFailed(token, "Stack", e);
   }
@@ -448,6 +464,63 @@ function renderFailed(token, what, e) {
   $("result").style.display = "none";
   updateButtons();
   $("modemsg").textContent = `${what} failed: ${e.message}`;
+}
+
+// ---- frames and visits pages ----
+async function setView(v) {
+  view = v;
+  $("viewBtn").innerHTML = (v === "visits" ? "Visits" : "Frames") + " &#8644;";
+  const token = ++visitToken;
+  images = [];
+  i = 0;
+  resetFrames();
+  if (v === "visits" && !visits) {
+    try {
+      const built = await buildVisits(token);
+      if (token !== visitToken) return;
+      visits = built;
+    } catch (e) {
+      if (token !== visitToken) return;
+      await setView("frames");
+      $("modemsg").textContent = "Visits failed: " + e.message;
+      return;
+    }
+  }
+  images = v === "visits" ? visits : frames;
+  $("frame").max = Math.max(images.length - 1, 0);
+  resetFrames();
+  if (images.length) draw();
+}
+
+// split the frames wherever SPHEREx was away for a while, then average each group into one picture
+async function buildVisits(token) {
+  const groups = [];
+  for (const f of frames) {
+    const g = groups[groups.length - 1];
+    g && f.mjd - g[g.length - 1].mjd <= VISIT_GAP_DAYS ? g.push(f) : groups.push([f]);
+  }
+  const built = [];
+  for (const [n, g] of groups.entries()) {
+    $("modemsg").textContent = `Building visit ${n + 1} of ${groups.length}...`;
+    const ims = await Promise.all(g.map(f => loadImg(src(f))));
+    if (token !== visitToken) return built;
+    const {values, w, h} = average(ims);
+    const waves = g.map(f => f.wavelength_um).filter(x => x != null);
+    const wmin = waves.length ? Math.min(...waves) : null, wmax = waves.length ? Math.max(...waves) : null;
+    built.push({
+      src: paint(values, w, h, document.createElement("canvas")).toDataURL(),
+      count: g.length,
+      date: `${g[0].date.slice(0, 10)} to ${g[g.length - 1].date.slice(0, 10)}`,
+      end: g[g.length - 1].date,
+      mjd: g.reduce((sum, f) => sum + f.mjd, 0) / g.length,
+      detector: [...new Set(g.map(f => f.detector))].sort().join(", "),
+      wavelength_um: waves.length ? `${wmin} – ${wmax}` : "?",
+      wmin, wmax,
+      url: "",
+      preview: g[0].preview,
+    });
+  }
+  return built;
 }
 
 // ---- spectrum ----
@@ -525,8 +598,9 @@ function plotSpectrum(points) {
 }
 
 let specPoints = [];
-function specJump(n) {
+async function specJump(n) {
   const p = specPoints[n];
+  if (view === "visits") await setView("frames");
   const k = images.findIndex(f => f.detector === p.detector && Math.abs(f.mjd - p.mjd) < 0.0001);
   if (k < 0) {
     $("specmsg").textContent = `That frame is on detector ${p.detector}, or was dropped from the video`;
