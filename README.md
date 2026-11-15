@@ -12,9 +12,9 @@ onto a common sky-aligned grid and saves them as PNG frames.
 
 | Role | Who |
 |---|---|
-| Frontend | @decidedarcher35 |
-| Backend | @enamour |
-| Testing and README | @aalam |
+| Frontend | decidedarcher35 / DeveloperYoussef35 |
+| Backend | enamour / EN-D001 |
+
 
 ---
 
