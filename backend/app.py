@@ -164,3 +164,25 @@ def status(
 def targets():
     p = CACHE / "targets.json"
     return json.load(open(p)) if p.exists() else []
+
+
+@app.get("/spectrum")
+def spectrum(
+    ra: float = Query(..., ge=0, le=360),
+    dec: float = Query(..., ge=-90, le=90),
+    fov: float = Query(120, ge=30, le=600),
+    det: int = Query(3, ge=1, le=6),
+):
+    path = CACHE / f"{ra:.4f}_{dec:.4f}_{int(fov)}" / f"S{det}.json"
+    with _lock_for(str(path)):
+        if not path.exists():
+            try:
+                points = pipeline.measure_detector(pipeline.find_images(ra, dec), det, ra, dec)
+            except ValueError as e:
+                raise HTTPException(status_code=404, detail=str(e))
+            except Exception as e:
+                raise HTTPException(status_code=502, detail=f"IRSA problem: {e}")
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with open(path, "w") as f:
+                json.dump(points, f, indent=2)
+    return json.load(open(path))

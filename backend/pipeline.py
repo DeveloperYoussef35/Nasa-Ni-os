@@ -4,6 +4,7 @@ import json
 import logging
 import time
 import urllib.error
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import astropy.units as u
@@ -14,6 +15,7 @@ from astropy.time import Time
 from astropy.utils.data import conf
 from astropy.visualization import ZScaleInterval
 from astropy.wcs import WCS
+from astropy.wcs.utils import proj_plane_pixel_area
 from astroquery.ipac.irsa import Irsa
 from PIL import Image
 from reproject import reproject_interp
@@ -156,6 +158,44 @@ def build_detector(results, det, ra, dec, size_arcsec, out_dir, limit=None,
     with open(out_dir / f"D{det}.json", "w") as f:
         json.dump(frames, f, indent=2)
     return frames
+
+
+
+def measure(row, ra, dec, size_arcsec=120):
+    url = f"{row['access_url']}?center={ra},{dec}d&size={size_arcsec / 3600}"
+    with open_with_retry(url) as hdul:
+        data = hdul["IMAGE"].data.astype(float)
+        wcs = WCS(hdul["IMAGE"].header)
+        wavelength = get_wavelength(hdul, ra, dec)
+    x, y = wcs.world_to_pixel(SkyCoord(ra=ra, dec=dec, unit="deg"))
+    yy, xx = np.indices(data.shape)
+    r = np.hypot(xx - x, yy - y)
+    core = data[r <= 2]
+    ring = data[(r > 4) & (r < 8)]
+    ring = ring[np.isfinite(ring)]
+    if np.isnan(wavelength) or not np.isfinite(core).all() or len(ring) < 10:
+        return None
+    pixel_sr = proj_plane_pixel_area(wcs.celestial) * (np.pi / 180) ** 2
+    return {
+        "wavelength_um": round(wavelength, 3),
+        "flux_mjy": round(float((core - np.median(ring)).sum() * pixel_sr * 1e9), 4),
+        "date": str(row["date"]),
+        "mjd": float(row["t_min"]),
+        "detector": int(row["detector"]),
+    }
+
+
+def measure_detector(results, det, ra, dec):
+    def one(row):
+        try:
+            return measure(row, ra, dec)
+        except Exception as e:
+            print("  skip:", e)
+            return None
+    rows = results[results["detector"] == det]
+    with ThreadPoolExecutor(4) as pool:
+        points = [p for p in pool.map(one, rows) if p]
+    return sorted(points, key=lambda p: p["wavelength_um"])
 
 
 if __name__ == "__main__":

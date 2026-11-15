@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
+<title>Space Watch</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
 <body style="display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;margin:0;background:#90CDF4;color:#4A5568;font-family:Inter,sans-serif">
-<h1 style="color:#2B6CB0;margin:0 0 24px">Space seer</h1>
-<form onsubmit="load();return false" style="background:#FFFFFF;padding:12px 24px;border-radius:8px;display:flex;gap:12px;align-items:center;margin-bottom:12px">
+<header style="align-self:stretch;background:#2B6CB0;padding:12px 32px;margin-bottom:auto;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px">
+<h1 style="margin:0;color:#FFFFFF;font-size:24px">Space Watch</h1>
+<form onsubmit="load();return false" style="background:#3F82CC;color:#FFFFFF;padding:8px 20px;border-radius:8px;display:flex;gap:12px;align-items:center;margin:0">
 <select id="target" onchange="pick()"><option value="">Target...</option></select>
 RA <input id="ra" size="8">
 Dec <input id="dec" size="8">
@@ -11,11 +13,37 @@ FOV <input id="fov" size="4" value="120">
 Detector <select id="det"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option></select>
 <button style="background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter">Go</button>
 </form>
+<div id="featMenu" style="justify-self:end;position:relative">
+<button onclick="toggleFeatures()" style="background:none;border:none;color:#FFFFFF;font-family:Inter;font-size:16px;cursor:pointer;padding:8px 0">Features <span id="featArrow" style="display:inline-block;transition:transform 0.2s">&#9662;</span></button>
+<div id="featPanel" style="display:none;position:absolute;right:0;top:calc(100% + 12px);z-index:10;width:320px;max-height:70vh;overflow-y:auto;box-sizing:border-box;background:#FFFFFF;color:#4A5568;padding:16px 16px 4px;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.2);font-size:13px;line-height:1.5">
+<p style="margin:0 0 12px"><span style="color:#2B6CB0;font-weight:bold">Search.</span> Pick a test target, or enter RA and Dec in decimal degrees, a field of view in arcseconds and one of the six detectors. Adding ?ra=...&amp;dec=... to the link opens a position directly.</p>
+<p style="margin:0 0 12px"><span style="color:#2B6CB0;font-weight:bold">Playback.</span> SPHEREx frames play in time order like a video. Use the frame slider, speed and pause. On test targets the arrow shows the expected direction of motion.</p>
+<p style="margin:0 0 12px"><span style="color:#2B6CB0;font-weight:bold">Frames.</span> Tick frames in the list to use them with Blink, Difference and Stack. Click a row to jump to that frame.</p>
+<p style="margin:0 0 12px"><span style="color:#2B6CB0;font-weight:bold">Blink.</span> Flips quickly between the ticked frames, so anything that moves seems to jump while stars stay still.</p>
+<p style="margin:0 0 12px"><span style="color:#2B6CB0;font-weight:bold">Difference.</span> Subtracts the earlier of two ticked frames from the later one. White is brighter later, black is brighter earlier, and unchanged sky turns grey.</p>
+<p style="margin:0 0 12px"><span style="color:#2B6CB0;font-weight:bold">Stack.</span> Averages the ticked frames to cut noise and reveal faint sources. Moving objects smear out.</p>
+<p style="margin:0 0 12px"><span style="color:#2B6CB0;font-weight:bold">Spectrum.</span> Measures how bright the centre target is at each wavelength, using raw SPHEREx data. Choose one detector or all six.</p>
+<p style="margin:0 0 12px"><span style="color:#2B6CB0;font-weight:bold">Report.</span> Press Report or the space bar to save a note about the current frame for others to check.</p>
+</div>
+</div>
+</header>
 <p id="msg"></p>
 <progress id="bar" style="display:none;width:400px"></progress>
 <div style="display:flex;align-items:center;gap:32px">
+<div style="background:#FFFFFF;border-radius:8px;width:260px;height:400px;display:flex;flex-direction:column;box-sizing:border-box">
+<p style="margin:12px 16px 4px;font-weight:bold;color:#2B6CB0">Frames <span id="selcount" style="font-weight:normal;color:#4A5568;font-size:13px"></span></p>
+<p style="margin:0 16px 8px;font-size:13px"><a href="#" onclick="selectAll(true);return false" style="color:#2B6CB0">All</a> &middot; <a href="#" onclick="selectAll(false);return false" style="color:#2B6CB0">None</a></p>
+<div id="list" style="flex:1;overflow-y:auto;position:relative;border-top:1px solid #E2E8F0;border-bottom:1px solid #E2E8F0"></div>
+<p id="modemsg" style="margin:8px 12px 0;font-size:12px;min-height:16px"></p>
+<div style="display:flex;flex-wrap:wrap;gap:8px;padding:8px 12px 12px">
+<button id="blinkBtn" onclick="toggleBlink()" style="flex:1;background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 0;font-family:Inter;border-radius:4px;cursor:pointer">Blink</button>
+<button id="diffBtn" onclick="toggleDiff()" style="flex:1;background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 0;font-family:Inter;border-radius:4px;cursor:pointer">Difference</button>
+<button id="stackBtn" onclick="toggleStack()" style="flex-basis:100%;background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 0;font-family:Inter;border-radius:4px;cursor:pointer">Stack</button>
+</div>
+</div>
 <div style="position:relative;width:400px;height:400px">
-<img id="view" style="width:400px;height:400px;display:block;outline:2px solid #FFFFFF" onload="arrow()">
+<img id="view" crossorigin="anonymous" style="width:400px;height:400px;display:block;outline:2px solid #FFFFFF" onload="arrow()">
+<canvas id="result" style="position:absolute;top:0;left:0;width:400px;height:400px;display:none;image-rendering:pixelated;outline:2px solid #FFFFFF"></canvas>
 <svg width="400" height="400" style="position:absolute;top:0;left:0;pointer-events:none">
 <defs><marker id="head" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0L6,3L0,6Z" fill="#90CDF4"/></marker></defs>
 <path d="M180,200H194M206,200H220M200,180V194M200,206V220" stroke="#90CDF4" stroke-width="2"/>
@@ -28,12 +56,30 @@ Detector <select id="det"><option>1</option><option>2</option><option selected>3
 <p>Detector: <span id="detector"></span></p>
 <p>Wavelength: <span id="wavelength"></span> µm</p>
 <p>URL: <a id="url" style="color:#2B6CB0"></a></p>
-<p>Frame <input id="frame" type="range" min="0" max="0" value="0" oninput="i=+this.value;draw()"></p>
+<p>Frame <input id="frame" type="range" min="0" max="0" value="0" oninput="jump(+this.value)"></p>
 <p>Speed <input id="speed" type="range" min="1" max="10" value="2"></p>
 <button style="background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter" onclick="paused=!paused;this.textContent=paused?'Resume':'Pause'">Pause</button>
 </div>
 </div>
-<div onclick="report()" style="margin-top:32px;width:600px;padding:12px;background:#2B6CB0;color:#FFFFFF;text-align:center;border-radius:8px;cursor:pointer">Report</div>
+<div style="margin-top:32px;width:600px;box-sizing:border-box;background:#FFFFFF;padding:16px 24px;border-radius:8px">
+<div style="display:flex;align-items:center;gap:8px">
+<p style="margin:0;font-weight:bold;color:#2B6CB0;flex:1">Spectrum <span id="speccount" style="font-weight:normal;color:#4A5568;font-size:13px"></span></p>
+<button id="specOne" onclick="spectrum(false)" style="background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter;border-radius:4px;cursor:pointer">This detector</button>
+<button id="specAll" onclick="spectrum(true)" style="background:#2B6CB0;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter;border-radius:4px;cursor:pointer">All detectors</button>
+</div>
+<p id="specmsg" style="margin:8px 0 0;font-size:12px;min-height:16px">Brightness of the centre target at each wavelength. The first run per detector downloads from IRSA and takes a few minutes</p>
+<svg id="spec" width="552" height="260" style="display:none;margin-top:8px;font-family:Inter"></svg>
+</div>
+<div onclick="report()" style="margin-top:32px;width:600px;padding:12px;background:#2B6CB0;color:#FFFFFF;text-align:center;border-radius:8px;cursor:pointer;margin-bottom:32px">Report</div>
+<footer style="align-self:stretch;margin-top:auto;background:#2B6CB0;color:#FFFFFF;padding:24px 32px;font-size:13px;line-height:1.5">
+<div style="max-width:900px;margin:auto">
+<h2 style="margin:0 0 8px;font-size:16px">Our story</h2>
+<p style="margin:0 0 8px">We are NASA Niños, and Space Watch started with a simple goal: let anyone watch the sky change. Getting there was harder than it looked.</p>
+<p style="margin:0 0 8px">SPHEREx frames arrive tilted, at different scales and in a different colour of light every time, so we had to line each one up on the same north-up grid before a moving star would look like it moved. The brightest stars overloaded the detector and left holes in their centres, so we learned to patch them and to use gentler contrast so stars would not blow out.</p>
+<p style="margin:0 0 8px">The stars would not sit still either. Barnard's Star has moved several arcminutes since its catalogue position was measured, so we had to work out where every target is today. The IRSA archive went down more than once while we worked, and every frame takes seconds to download, so we added retries, a quick 12-frame preview, a progress bar and a cache that makes the test targets instant.</p>
+<p style="margin:0">We built the frontend and the backend separately and merged them along the way, fixing whatever broke. The result is a tool we hope helps someone spot something new.</p>
+</div>
+</footer>
 <div id="pop" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#FFFFFF;padding:24px;border-radius:8px">
 <span onclick="pop.style.display='none'" style="position:absolute;top:8px;right:12px;cursor:pointer">&times;</span>
 <p id="popurl"></p>
@@ -50,6 +96,10 @@ let targets = [];
 let i = 0;
 let paused = false;
 let current = "";
+let selected = new Set();   // indices of ticked frames
+let mode = "normal";        // "normal" | "blink" | "diff" | "stack"
+let blinkPos = 0;
+let renderToken = 0;       // stops a slow, outdated render from drawing
 
 function report() {
   popurl.textContent = $("url").textContent || location.href;
@@ -89,6 +139,8 @@ function load() {
   history.replaceState(null, "", "?" + p);
   current = p.toString();
   images = [];
+  resetFrames();
+  clearSpectrum();
   $("msg").textContent = "Finding images...";
   $("bar").style.display = "none";
   check(current, "/start");
@@ -118,6 +170,7 @@ function show(data) {
   images = data;
   i = 0;
   $("frame").max = Math.max(data.length - 1, 0);
+  resetFrames();
   draw();
 }
 
@@ -132,6 +185,7 @@ function draw() {
   $("url").href = f.url || "";
   $("frame").value = i;
   $("preview").textContent = f.preview ? "Preview: 12 frames across the year" : "";
+  highlightRow();
 }
 
 function arrow() {
@@ -143,10 +197,341 @@ function arrow() {
   $("pm").setAttribute("y2", 200 - t.pm_dec_mas_yr / 1000 * scale);
 }
 
+// ---- frame list, blink, difference and stack ----
+const sel = () => [...selected].sort((a, b) => a - b);
+const still = () => mode === "diff" || mode === "stack";   // modes that show one computed image
+
+function resetFrames() {
+  selected = new Set();
+  renderToken++;
+  mode = "normal";
+  $("result").style.display = "none";
+  renderList();
+  updateButtons();
+}
+
+function renderList() {
+  $("list").innerHTML = images.map((f, n) => `
+<label style="display:flex;gap:8px;align-items:center;padding:4px 16px;font-size:13px;cursor:pointer">
+<input type="checkbox" ${selected.has(n) ? "checked" : ""} onchange="toggleSel(${n}, this)">
+<span onclick="event.preventDefault();jump(${n})">${n + 1}. ${f.date.slice(0, 16)} &middot; ${f.wavelength_um ?? "?"} µm</span>
+</label>`).join("");
+  highlightRow();
+}
+
+function highlightRow() {
+  const rows = $("list").children;
+  [...rows].forEach((r, n) => r.style.background = n === i && !still() ? "#EBF8FF" : "");
+  const r = rows[i], L = $("list");
+  if (!r || still()) return;
+  if (r.offsetTop < L.scrollTop || r.offsetTop + r.offsetHeight > L.scrollTop + L.clientHeight)
+    L.scrollTop = r.offsetTop - L.clientHeight / 2;
+}
+
+function jump(n) {
+  if (mode !== "normal") stopMode();
+  i = n;
+  draw();
+}
+
+// re-render or leave the current mode after the ticked frames change
+function selectionChanged() {
+  const n = selected.size;
+  if (mode === "blink" && n < 2) stopMode();
+  if (mode === "diff") n === 2 ? renderDiff() : stopMode();
+  if (mode === "stack") n >= 2 ? renderStack() : stopMode();
+  if (mode === "blink" && !selected.has(i)) blinkPos = -1;
+  updateButtons();
+}
+
+function toggleSel(n, box) {
+  if (box.checked && mode === "diff" && selected.size >= 2) {
+    box.checked = false;
+    $("modemsg").textContent = "Difference mode uses exactly 2 frames";
+    return;
+  }
+  box.checked ? selected.add(n) : selected.delete(n);
+  selectionChanged();
+}
+
+function selectAll(on) {
+  if (mode === "diff") stopMode();
+  selected = on ? new Set(images.map((_, n) => n)) : new Set();
+  renderList();
+  selectionChanged();
+}
+
+function updateButtons() {
+  const n = selected.size;
+  const buttons = [
+    ["blinkBtn", "blink", "Blink", n >= 2],
+    ["diffBtn", "diff", "Difference", n === 2],
+    ["stackBtn", "stack", "Stack", n >= 2],
+  ];
+  for (const [id, m, label, ok] of buttons) {
+    const b = $(id);
+    b.textContent = mode === m ? "Stop " + label.toLowerCase() : label;
+    b.disabled = !(mode === m || ok);
+    b.style.opacity = b.disabled ? 0.4 : 1;
+  }
+  $("selcount").textContent = n ? `(${n} selected)` : "";
+  if (mode === "normal")
+    $("modemsg").textContent = images.length ? "Tick 2 or more frames to blink or stack, exactly 2 for difference" : "";
+}
+
+function stopMode() {
+  mode = "normal";
+  renderToken++;
+  $("result").style.display = "none";
+  updateButtons();
+  if (images.length) draw();
+}
+
+function toggleBlink() {
+  if (mode === "blink") return stopMode();
+  if (selected.size < 2) return;
+  if (still()) stopMode();
+  mode = "blink";
+  blinkPos = 0;
+  i = sel()[0];
+  draw();
+  updateButtons();
+  $("modemsg").textContent = `Blinking ${selected.size} frames`;
+}
+
+function toggleDiff() {
+  if (mode === "diff") return stopMode();
+  if (selected.size !== 2) return;
+  mode = "diff";
+  updateButtons();
+  highlightRow();
+  renderDiff();
+}
+
+function toggleStack() {
+  if (mode === "stack") return stopMode();
+  if (selected.size < 2) return;
+  mode = "stack";
+  updateButtons();
+  highlightRow();
+  renderStack();
+}
+
+function loadImg(url) {
+  return new Promise((ok, fail) => {
+    const im = new Image();
+    im.crossOrigin = "anonymous";
+    im.onload = () => ok(im);
+    im.onerror = () => fail(new Error("could not load " + url));
+    im.src = url;
+  });
+}
+
+function pixels(im, w, h) {
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  const g = c.getContext("2d");
+  g.drawImage(im, 0, 0, w, h);
+  return g.getImageData(0, 0, w, h).data;
+}
+
+// value below which `frac` of the pixels fall, from a 256-bin histogram
+function percentile(hist, frac, total) {
+  let count = 0;
+  for (let v = 0; v < 256; v++) {
+    count += hist[v];
+    if (count >= frac * total) return v;
+  }
+  return 255;
+}
+
+// draw grey values (0-255, clipped) onto the result canvas
+function paint(values, w, h) {
+  const c = $("result");
+  c.width = w; c.height = h;
+  const g = c.getContext("2d"), out = g.createImageData(w, h);
+  for (let p = 0; p < values.length; p++) {
+    const v = Math.max(0, Math.min(255, values[p]));
+    out.data[p * 4] = out.data[p * 4 + 1] = out.data[p * 4 + 2] = v;
+    out.data[p * 4 + 3] = 255;
+  }
+  g.putImageData(out, 0, 0);
+  c.style.display = "block";
+}
+
+// later frame minus earlier frame: white = brighter later, black = brighter earlier
+async function renderDiff() {
+  const [a, b] = sel();
+  const token = ++renderToken;
+  $("modemsg").textContent = "Computing difference...";
+  try {
+    const [A, B] = await Promise.all([a, b].map(n => loadImg(API + images[n].image)));
+    if (token !== renderToken || mode !== "diff") return;
+    const w = A.naturalWidth, h = A.naturalHeight;
+    const pa = pixels(A, w, h), pb = pixels(B, w, h);
+    const d = new Int16Array(w * h), hist = new Uint32Array(256);
+    for (let p = 0; p < d.length; p++) {
+      d[p] = pb[p * 4] - pa[p * 4];
+      hist[Math.abs(d[p])]++;
+    }
+    // scale so the 99.5th percentile change hits full black/white
+    const top = Math.max(percentile(hist, 0.995, d.length), 1);
+    paint(d.map(v => 128 + 127 * v / top), w, h);
+    $("date").textContent = `#${b + 1} minus #${a + 1}`;
+    $("wavelength").textContent = `${images[b].wavelength_um} − ${images[a].wavelength_um}`;
+    $("modemsg").textContent = `White: brighter in #${b + 1}. Black: brighter in #${a + 1}`;
+  } catch (e) {
+    renderFailed(token, "Difference", e);
+  }
+}
+
+// average of the ticked frames: noise cancels, real sources stay, movers smear
+async function renderStack() {
+  const s = sel();
+  const token = ++renderToken;
+  $("modemsg").textContent = `Stacking ${s.length} frames...`;
+  try {
+    const ims = await Promise.all(s.map(n => loadImg(API + images[n].image)));
+    if (token !== renderToken || mode !== "stack") return;
+    const w = ims[0].naturalWidth, h = ims[0].naturalHeight;
+    const avg = new Float32Array(w * h), hist = new Uint32Array(256);
+    for (const im of ims) {
+      const px = pixels(im, w, h);
+      for (let p = 0; p < avg.length; p++) avg[p] += px[p * 4];
+    }
+    for (let p = 0; p < avg.length; p++) {
+      avg[p] /= ims.length;
+      hist[Math.round(avg[p])]++;
+    }
+    // stretch so the darkest 0.5% is black and the brightest 0.5% is white
+    const lo = percentile(hist, 0.005, avg.length), hi = percentile(hist, 0.995, avg.length);
+    paint(avg.map(v => 255 * (v - lo) / Math.max(hi - lo, 1)), w, h);
+    const waves = s.map(n => images[n].wavelength_um).filter(x => x != null);
+    $("date").textContent = `Stack of ${s.length}: ${images[s[0]].date.slice(0, 10)} to ${images[s[s.length - 1]].date.slice(0, 10)}`;
+    $("wavelength").textContent = waves.length ? `${Math.min(...waves)} – ${Math.max(...waves)}` : "?";
+    $("modemsg").textContent = `Average of ${s.length} frames. Moving objects smear out`;
+  } catch (e) {
+    renderFailed(token, "Stack", e);
+  }
+}
+
+function renderFailed(token, what, e) {
+  if (token !== renderToken) return;
+  mode = "normal";
+  $("result").style.display = "none";
+  updateButtons();
+  $("modemsg").textContent = `${what} failed: ${e.message}`;
+}
+
+// ---- spectrum ----
+let specToken = 0;
+
+function clearSpectrum() {
+  specToken++;
+  $("spec").style.display = "none";
+  $("speccount").textContent = "";
+  $("specmsg").textContent = "Brightness of the centre target at each wavelength. The first run per detector downloads from IRSA and takes a few minutes";
+  $("specOne").disabled = $("specAll").disabled = false;
+  $("specOne").style.opacity = $("specAll").style.opacity = 1;
+}
+
+async function spectrum(all) {
+  if (!current) return;
+  const token = ++specToken;
+  const dets = all ? [1, 2, 3, 4, 5, 6] : [+new URLSearchParams(current).get("det")];
+  $("specOne").disabled = $("specAll").disabled = true;
+  $("specOne").style.opacity = $("specAll").style.opacity = 0.4;
+  $("specmsg").textContent = `Measuring ${dets.length > 1 ? "all 6 detectors" : "detector " + dets[0]}... this can take a few minutes`;
+  try {
+    const parts = await Promise.all(dets.map(d => {
+      const p = new URLSearchParams(current);
+      p.set("det", d);
+      return fetch(API + "/spectrum?" + p).then(async r => {
+        const body = await r.json();
+        if (!r.ok) throw new Error(body.detail || r.statusText);
+        return body;
+      });
+    }));
+    if (token !== specToken) return;
+    plotSpectrum(parts.flat().sort((a, b) => a.wavelength_um - b.wavelength_um));
+  } catch (e) {
+    if (token === specToken) $("specmsg").textContent = "Spectrum failed: " + e.message;
+  }
+  if (token === specToken) {
+    $("specOne").disabled = $("specAll").disabled = false;
+    $("specOne").style.opacity = $("specAll").style.opacity = 1;
+  }
+}
+
+function plotSpectrum(points) {
+  const svg = $("spec");
+  $("speccount").textContent = `(${points.length} points)`;
+  if (!points.length) {
+    svg.style.display = "none";
+    $("specmsg").textContent = "No usable measurements. The target may be saturated or off the edge";
+    return;
+  }
+  const W = 552, H = 260, L = 56, R = 12, T = 12, B = 40;
+  const xs = points.map(p => p.wavelength_um), ys = points.map(p => p.flux_mjy);
+  const x0 = Math.min(...xs), x1 = Math.max(...xs);
+  const y0 = Math.min(0, ...ys), y1 = Math.max(...ys);
+  const xpad = (x1 - x0) * 0.05 || 0.05, ypad = (y1 - y0) * 0.05 || 1;
+  const X = v => L + (v - (x0 - xpad)) / (x1 - x0 + 2 * xpad) * (W - L - R);
+  const Y = v => H - B - (v - y0) / (y1 + ypad - y0) * (H - T - B);
+  const ticks = (a, b) => [0, 1, 2, 3, 4].map(k => a + (b - a) * k / 4);
+  const fmt = v => Math.abs(v) >= 100 ? v.toFixed(0) : Math.abs(v) >= 1 ? v.toFixed(1) : v.toFixed(2);
+  let out = `<line x1="${L}" y1="${H - B}" x2="${W - R}" y2="${H - B}" stroke="#4A5568"/>
+<line x1="${L}" y1="${T}" x2="${L}" y2="${H - B}" stroke="#4A5568"/>`;
+  for (const v of ticks(x0, x1))
+    out += `<text x="${X(v)}" y="${H - B + 16}" font-size="11" fill="#4A5568" text-anchor="middle">${v.toFixed(2)}</text>`;
+  for (const v of ticks(y0, y1 + ypad))
+    out += `<line x1="${L}" y1="${Y(v)}" x2="${W - R}" y2="${Y(v)}" stroke="#E2E8F0"/>
+<text x="${L - 6}" y="${Y(v) + 4}" font-size="11" fill="#4A5568" text-anchor="end">${fmt(v)}</text>`;
+  out += `<text x="${(L + W - R) / 2}" y="${H - 4}" font-size="12" fill="#4A5568" text-anchor="middle">Wavelength (µm)</text>
+<text x="14" y="${(T + H - B) / 2}" font-size="12" fill="#4A5568" text-anchor="middle" transform="rotate(-90 14 ${(T + H - B) / 2})">Brightness (mJy)</text>
+<polyline fill="none" stroke="#90CDF4" stroke-width="1.5" points="${points.map(p => X(p.wavelength_um) + "," + Y(p.flux_mjy)).join(" ")}"/>`;
+  points.forEach((p, n) => out += `<circle cx="${X(p.wavelength_um)}" cy="${Y(p.flux_mjy)}" r="4" fill="#2B6CB0" style="cursor:pointer" onclick="specJump(${n})"><title>${p.wavelength_um} µm, ${fmt(p.flux_mjy)} mJy, D${p.detector}, ${p.date.slice(0, 16)}</title></circle>`);
+  svg.innerHTML = out;
+  svg.style.display = "block";
+  specPoints = points;
+  $("specmsg").textContent = "Hover a point for details. Click it to jump to that frame when its detector is loaded";
+}
+
+let specPoints = [];
+function specJump(n) {
+  const p = specPoints[n];
+  const k = images.findIndex(f => f.detector === p.detector && Math.abs(f.mjd - p.mjd) < 0.0001);
+  if (k < 0) {
+    $("specmsg").textContent = `That frame is on detector ${p.detector}, or was dropped from the video`;
+    return;
+  }
+  jump(k);
+}
+
+// ---- features menu ----
+function toggleFeatures(open) {
+  const show = open ?? $("featPanel").style.display === "none";
+  $("featPanel").style.display = show ? "block" : "none";
+  $("featArrow").style.transform = show ? "rotate(180deg)" : "";
+}
+document.addEventListener("click", e => {
+  if (!$("featMenu").contains(e.target)) toggleFeatures(false);
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") toggleFeatures(false);
+});
+
 function tick() {
   if (images.length && !paused) {
-    i = (i + 1) % images.length;
-    draw();
+    if (mode === "blink") {
+      const s = sel();
+      blinkPos = (blinkPos + 1) % s.length;
+      i = s[blinkPos];
+      draw();
+    } else if (mode === "normal") {
+      i = (i + 1) % images.length;
+      draw();
+    }
   }
   setTimeout(tick, 1000 / $("speed").value);
 }
