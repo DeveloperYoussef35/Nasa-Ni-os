@@ -3,7 +3,7 @@
 <title>Space Watch</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <body style="display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;margin:0;background:#0F172A;color:#CBD5E1;font-family:Inter,sans-serif;accent-color:#2563EB;color-scheme:dark">
-<header style="align-self:stretch;background:#020617;padding:12px 32px;margin-bottom:auto;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px">
+<header style="align-self:stretch;background:#020617;padding:12px 32px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px">
 <h1 style="margin:0;color:#F1F5F9;font-size:24px">Space Watch</h1>
 <form onsubmit="load();return false" style="background:#1E293B;color:#CBD5E1;padding:8px 20px;border-radius:8px;display:flex;gap:12px;align-items:center;margin:0">
 <select id="target" onchange="pick()" style="border:none;border-radius:4px;padding:4px 6px;font-family:Inter;background:#0F172A;color:#CBD5E1"><option value="">Target...</option></select>
@@ -29,7 +29,8 @@ Detector <select id="det" style="border:none;border-radius:4px;padding:4px 6px;f
 </div>
 </div>
 </header>
-<p id="msg"></p>
+<main style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 0">
+<p id="msg" style="margin:0"></p>
 <progress id="bar" style="display:none;width:400px"></progress>
 <div style="display:flex;align-items:flex-start;gap:32px">
 <div style="background:#1E293B;border-radius:8px;width:260px;height:400px;display:flex;flex-direction:column;box-sizing:border-box">
@@ -64,7 +65,7 @@ Detector <select id="det" style="border:none;border-radius:4px;padding:4px 6px;f
 <button style="background:#2563EB;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter;border-radius:4px;cursor:pointer" onclick="paused=!paused;this.textContent=paused?'Resume':'Pause'">Pause</button>
 </div>
 </div>
-<div style="margin-top:32px;margin-bottom:96px;width:600px;box-sizing:border-box;background:#1E293B;padding:16px 24px;border-radius:8px">
+<div style="margin-top:32px;width:600px;box-sizing:border-box;background:#1E293B;padding:16px 24px;border-radius:8px">
 <div style="display:flex;align-items:center;gap:8px">
 <p style="margin:0;font-weight:bold;color:#F1F5F9;flex:1">Spectrum <span id="speccount" style="font-weight:normal;color:#94A3B8;font-size:13px"></span></p>
 <button id="specOne" onclick="spectrum(false)" style="background:#2563EB;color:#FFFFFF;border:none;padding:8px 16px;font-family:Inter;border-radius:4px;cursor:pointer">This detector</button>
@@ -73,7 +74,8 @@ Detector <select id="det" style="border:none;border-radius:4px;padding:4px 6px;f
 <p id="specmsg" style="margin:8px 0 0;font-size:12px;min-height:16px">Brightness of the centre target at each wavelength. The first run per detector downloads from IRSA and takes a few minutes</p>
 <svg id="spec" width="552" height="260" style="display:none;margin-top:8px;font-family:Inter"></svg>
 </div>
-<footer style="align-self:stretch;margin-top:auto;background:#020617;color:#94A3B8;padding:24px 32px;font-size:13px;line-height:1.5;display:flex;justify-content:space-between;align-items:flex-end;gap:48px">
+</main>
+<footer style="align-self:stretch;background:#020617;color:#94A3B8;padding:24px 32px;font-size:13px;line-height:1.5;display:flex;justify-content:space-between;align-items:flex-end;gap:48px">
 <div style="flex:1">
 <h2 style="margin:0 0 8px;font-size:16px">Our story</h2>
 <p style="margin:0 0 8px">We are NASA Niños, and Space Watch started with a simple goal: let anyone watch the sky change. Getting there was harder than it looked.</p>
